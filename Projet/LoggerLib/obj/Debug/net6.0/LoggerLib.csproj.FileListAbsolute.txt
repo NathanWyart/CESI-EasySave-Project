@@ -1,0 +1,13 @@
+C:\Users\willi\Desktop\Projet\LoggerLib\bin\Debug\net6.0\LoggerLib.deps.json
+C:\Users\willi\Desktop\Projet\LoggerLib\bin\Debug\net6.0\LoggerLib.dll
+C:\Users\willi\Desktop\Projet\LoggerLib\bin\Debug\net6.0\LoggerLib.pdb
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.AssemblyInfoInputs.cache
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.AssemblyInfo.cs
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.csproj.CoreCompileInputs.cache
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.sourcelink.json
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.dll
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\refint\LoggerLib.dll
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.pdb
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\ref\LoggerLib.dll
+C:\Users\willi\Desktop\Projet\LoggerLib\obj\Debug\net6.0\LoggerLib.csproj.AssemblyReference.cache

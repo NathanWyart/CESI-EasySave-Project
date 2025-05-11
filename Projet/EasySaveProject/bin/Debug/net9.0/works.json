@@ -1,0 +1,42 @@
+[
+  {
+    "Name": "hh",
+    "Src": "h_",
+    "Dst": "bg",
+    "BackupType": 0,
+    "LastBackupDate": "2025-05-10 00:12:55",
+    "Type": null,
+    "SourcePath": null,
+    "TargetPath": null
+  },
+  {
+    "Name": "PH",
+    "Src": "GF",
+    "Dst": "BU",
+    "BackupType": 1,
+    "LastBackupDate": "2025-05-10 00:42:29",
+    "Type": null,
+    "SourcePath": null,
+    "TargetPath": null
+  },
+  {
+    "Name": "william",
+    "Src": "gmail",
+    "Dst": "ka",
+    "BackupType": 0,
+    "LastBackupDate": "2025-05-10 01:13:09",
+    "Type": null,
+    "SourcePath": null,
+    "TargetPath": null
+  },
+  {
+    "Name": "kck",
+    "Src": "cc",
+    "Dst": ",cd",
+    "BackupType": 1,
+    "LastBackupDate": "2025-05-10 01:13:57",
+    "Type": null,
+    "SourcePath": null,
+    "TargetPath": null
+  }
+]
