@@ -69,6 +69,82 @@ namespace NS_ViewModel
             return false;
         }
 
+        private void ExecuteSingleWork(Work work)
+        {
+            Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name} ...");
+
+            try
+            {
+                string[] files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
+                int totalFiles = files.Length;
+                long totalSize = files.Sum(f => new FileInfo(f).Length);
+                int remainingFiles = totalFiles;
+                long remainingSize = totalSize;
+
+                var stateEntry = new State
+                {
+                    Name = work.Name,
+                    TotalFile = totalFiles,
+                    TotalSize = totalSize,
+                    LeftFile = remainingFiles,
+                    LeftSize = remainingSize,
+                    StateStatus = "ACTIVE",
+                    CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                    CurrentPathSrc = "",
+                    CurrentPathDst = "",
+                    Progress = 0,
+                };
+
+                List<State> stateList = new List<State> { stateEntry };
+
+                foreach (string file in files)
+                {
+                    if (work.BackupType == BackupType.DIFFERENTIAL && work.LastBackupDate.HasValue)
+                    {
+                        DateTime lastWriteTime = File.GetLastWriteTime(file);
+                        if (lastWriteTime <= work.LastBackupDate.Value)
+                            continue;
+                    }
+
+                    string relativePath = Path.GetRelativePath(work.Src, file);
+                    string destFile = Path.Combine(work.Dst, relativePath);
+                    Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    File.Copy(file, destFile, true);
+                    watch.Stop();
+
+                    long fileSize = new FileInfo(file).Length;
+                    long duration = watch.ElapsedMilliseconds;
+
+                    model.LogAction(work.Name, file, destFile, fileSize, duration);
+
+                    remainingFiles--;
+                    remainingSize -= fileSize;
+
+                    stateEntry.CurrentPathSrc = file;
+                    stateEntry.CurrentPathDst = destFile;
+                    stateEntry.LeftFile = remainingFiles;
+                    stateEntry.LeftSize = remainingSize;
+                    stateEntry.CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                    stateEntry.Progress = (int)(((double)(totalSize - remainingSize) / totalSize) * 100);
+
+                    model.UpdateRealTimeState(stateList);
+                }
+
+                stateEntry.StateStatus = "END";
+                model.UpdateRealTimeState(stateList);
+
+                work.LastBackupDate = DateTime.Now;
+                model.SaveWorks();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{GetTranslation("BackupError")}: {ex.Message}");
+            }
+        }
+
+
         public void ExecuteWork(string command)
         {
             var indicesToExecute = new List<int>();
@@ -118,9 +194,7 @@ namespace NS_ViewModel
             {
                 if (i >= 0 && i < works.Count)
                 {
-                    var work = works[i];
-                    Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name}");
-                    // TODO : Faire la fonctionnalité d'éxécution de sauvegarde
+                    ExecuteSingleWork(works[i]);
                 }
                 else
                 {
@@ -137,8 +211,9 @@ namespace NS_ViewModel
         {
             foreach (var work in model.Works)
             {
-                ExecuteWork(work.Name);
+                ExecuteSingleWork(work);
             }
+            Console.WriteLine(GetTranslation("ExecutionDone"));
         }
 
         public void ToggleLanguage() // Change the language mode

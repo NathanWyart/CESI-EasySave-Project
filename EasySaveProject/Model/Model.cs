@@ -14,7 +14,7 @@ namespace NS_Model
         public string LogPath { get; set; } = "logs"; // Path to the log file
 
         // Function to add a new work to the list of works
-        public void AddWork(string name, string src, string dst, BackupType type) 
+        public void AddWork(string name, string src, string dst, BackupType type)
         {
             Works.Add(new Work(name, src, dst, type));
         }
@@ -32,19 +32,27 @@ namespace NS_Model
                 Works = JsonSerializer.Deserialize<List<Work>>(File.ReadAllText("works.json"));
         }
 
+        // Function to update the state of the works from a JSON file
+        public void UpdateRealTimeState(List<State> states)
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(states, options);
+            File.WriteAllText("state.json", json);
+        }
+
         // Function to write log entries to a log file
-        public void LogAction(string backupName, string source, string destination, long size, long transferTime)
+        public void LogAction(string backupName, string source, string destination, long size, double transferTime)
         {
             Logger.LogDirectory = LogPath;
 
             Logger.WriteLog(new LogEntry
             {
-                Timestamp = DateTime.Now,
-                BackupName = backupName,
-                SourcePath = source,
-                DestinationPath = destination,
+                Name = backupName,
+                FileSource = source,
+                FileDestination = destination,
                 FileSize = size,
-                TransferTimeMs = transferTime
+                FileTransferTime = transferTime,
+                Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
             });
         }
     }
