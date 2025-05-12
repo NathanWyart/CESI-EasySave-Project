@@ -13,7 +13,7 @@ namespace NS_Model
         public string Src { get; set; }
         public string Dst { get; set; }
         public BackupType BackupType { get; set; }
-        public string LastBackupDate { get; set; }
+        public DateTime? LastBackupDate { get; set; } 
 
         // Constructor to initialize a work.
         public Work() { }
@@ -25,7 +25,7 @@ namespace NS_Model
             Src = src;
             Dst = dst;
             BackupType = type;
-            LastBackupDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            LastBackupDate = DateTime.Now;
         }
     }
 }

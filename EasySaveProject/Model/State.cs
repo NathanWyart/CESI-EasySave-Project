@@ -9,6 +9,7 @@ namespace NS_Model
     // This class represents the state of the works.
     public class State
     {
+        public string Name { get; set; } 
         public int TotalFile { get; set; }
         public long TotalSize { get; set; }
         public int Progress { get; set; }

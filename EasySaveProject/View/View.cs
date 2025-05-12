@@ -63,6 +63,7 @@ namespace NS_View
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("BackupWorkMenu")} ===\n");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("AddBackup"));
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("DeleteBackup"));
@@ -104,6 +105,7 @@ namespace NS_View
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("ExecutionMenu")} ===\n");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("ExecuteOne"));
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("ExecuteAll"));
@@ -145,6 +147,7 @@ namespace NS_View
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("Settings")} ===\n");
                 Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage"));
@@ -230,7 +233,7 @@ namespace NS_View
             Console.WriteLine(_viewModel.GetTranslation("ListOfBackups") + "\n");
             foreach (var work in works)
             {
-                Console.WriteLine($"[{i}] {work.Name} - {work.Src} -> {work.Dst} ({work.BackupType})");
+                Console.WriteLine($"[{i}] {work.Name} - {work.Src} -> {work.Dst} ({work.BackupType}) \n({_viewModel.GetTranslation("LastBackupUpdate")}{work.LastBackupDate})");
                 i++;
             }
         }

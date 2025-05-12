@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using NS_Model;
 using NS_View;
 using System.Xml;
+using static NS_Model.Model;
 
 namespace NS_ViewModel
 {
@@ -19,9 +20,7 @@ namespace NS_ViewModel
         private View view;
         // The language mode can be either "English" or "French".
         private string _languageMode;
-        // Path to the settings file.
-        private readonly string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
-
+        
         // Constructor of the ViewModel.
         public ViewModel()
         {
@@ -69,6 +68,87 @@ namespace NS_ViewModel
             return false;
         }
 
+        // This method executes a single work.
+        private void ExecuteSingleWork(Work work)
+        {
+            Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name} ...");
+
+            try
+            {
+                string[] files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
+                int totalFiles = files.Length;
+                long totalSize = files.Sum(f => new FileInfo(f).Length);
+                int remainingFiles = totalFiles;
+                long remainingSize = totalSize;
+
+                var stateEntry = new State
+                {
+                    Name = work.Name,
+                    TotalFile = totalFiles,
+                    TotalSize = totalSize,
+                    LeftFile = remainingFiles,
+                    LeftSize = remainingSize,
+                    StateStatus = "ACTIVE",
+                    CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                    CurrentPathSrc = "",
+                    CurrentPathDst = "",
+                    Progress = 0,
+                };
+
+                // Update the state in the model
+                List<State> stateList = new List<State> { stateEntry };
+                model.UpdateState(stateEntry);
+
+                // Iterate through the files and copy them
+                foreach (string file in files)
+                {
+                    if (work.BackupType == BackupType.DIFFERENTIAL && work.LastBackupDate.HasValue)
+                    {
+                        DateTime lastWriteTime = File.GetLastWriteTime(file);
+                        if (lastWriteTime <= work.LastBackupDate.Value)
+                            continue;
+                    }
+
+                    string relativePath = Path.GetRelativePath(work.Src, file);
+                    string destFile = Path.Combine(work.Dst, relativePath);
+                    Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    File.Copy(file, destFile, true);
+                    watch.Stop();
+
+                    long fileSize = new FileInfo(file).Length;
+                    long duration = watch.ElapsedMilliseconds;
+
+                    model.LogAction(work.Name, file, destFile, fileSize, duration);
+
+                    remainingFiles--;
+                    remainingSize -= fileSize;
+
+                    stateEntry.CurrentPathSrc = work.Src;
+                    stateEntry.CurrentPathDst = work.Dst;
+                    stateEntry.LeftFile = remainingFiles;
+                    stateEntry.LeftSize = remainingSize;
+                    stateEntry.CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                    stateEntry.Progress = (int)(((double)(totalSize - remainingSize) / totalSize) * 100);
+
+                    model.UpdateState(stateEntry);
+                }
+
+                stateEntry.StateStatus = "END";
+                model.UpdateState(stateEntry);
+
+                work.LastBackupDate = DateTime.Now;
+                model.SaveWorks();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{GetTranslation("BackupError")}: {ex.Message}");
+            }
+        }
+
+
+        // This method executes a work based on the command given by the user.
         public void ExecuteWork(string command)
         {
             var indicesToExecute = new List<int>();
@@ -118,9 +198,7 @@ namespace NS_ViewModel
             {
                 if (i >= 0 && i < works.Count)
                 {
-                    var work = works[i];
-                    Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name}");
-                    // TODO : Faire la fonctionnalité d'éxécution de sauvegarde
+                    ExecuteSingleWork(works[i]);
                 }
                 else
                 {
@@ -137,8 +215,9 @@ namespace NS_ViewModel
         {
             foreach (var work in model.Works)
             {
-                ExecuteWork(work.Name);
+                ExecuteSingleWork(work);
             }
+            Console.WriteLine(GetTranslation("ExecutionDone"));
         }
 
         public void ToggleLanguage() // Change the language mode
@@ -153,9 +232,9 @@ namespace NS_ViewModel
 
         private void LoadSettings()
         {
-            if (File.Exists(settingsPath))
+            if (File.Exists(Model.AppPaths.SettingsPath))
             {
-                var json = File.ReadAllText(settingsPath);
+                var json = File.ReadAllText(Model.AppPaths.SettingsPath);
                 dynamic settings = JsonConvert.DeserializeObject(json);
                 _languageMode = settings.Language ?? "English";
             }
@@ -171,7 +250,7 @@ namespace NS_ViewModel
         {
             var settings = new { Language = _languageMode };
             var json = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);
-            File.WriteAllText(settingsPath, json);
+            File.WriteAllText(Model.AppPaths.SettingsPath, json);
         }
 
         // This method returns the translation for a given key.
