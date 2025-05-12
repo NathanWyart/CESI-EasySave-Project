@@ -47,7 +47,8 @@ namespace NS_ViewModel
                     { "ListOfBackups", "List of Backup Works:" },
                     { "InvalidRange", "Invalid Range." },
                     { "InvalidBackupIndex", "Invalid Backup Work Index." },
-                    { "EnterWorkIndexes", "Enter the indexes of the backups to be run (ex. 1-3 or 1;3) : " }
+                    { "EnterWorkIndexes", "Enter the indexes of the backups to be run (ex. 1-3 or 1;3) : " },
+                    { "LastBackupUpdate", "Last Backup Update :" }
                 }
             },
             {
@@ -89,7 +90,8 @@ namespace NS_ViewModel
                     { "ListOfBackups", "Liste des travaux de sauvegarde :" },
                     { "InvalidRange", "Plage invalide." },
                     { "InvalidBackupIndex", "Index de sauvegarde invalide." },
-                    { "EnterWorkIndexes", "Entrez les index des sauvegardes à exécuter (ex: 1-3 ou 1;3) : " }
+                    { "EnterWorkIndexes", "Entrez les index des sauvegardes à exécuter (ex: 1-3 ou 1;3) : " },
+                    { "LastBackupUpdate", "Dernière mise à jour :" }
                 }
             }
         };

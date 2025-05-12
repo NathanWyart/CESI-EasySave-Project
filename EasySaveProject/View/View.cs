@@ -233,7 +233,7 @@ namespace NS_View
             Console.WriteLine(_viewModel.GetTranslation("ListOfBackups") + "\n");
             foreach (var work in works)
             {
-                Console.WriteLine($"[{i}] {work.Name} - {work.Src} -> {work.Dst} ({work.BackupType})");
+                Console.WriteLine($"[{i}] {work.Name} - {work.Src} -> {work.Dst} ({work.BackupType}) \n({_viewModel.GetTranslation("LastBackupUpdate")}{work.LastBackupDate})");
                 i++;
             }
         }
