@@ -26,6 +26,11 @@ namespace LoggerLib
             string fileName = $"{DateTime.Now:yyyy-MM-dd}.json";
             string fullPath = Path.Combine(LogDirectory, fileName);
 
+            if (!Directory.Exists(LogDirectory))
+            {
+                Directory.CreateDirectory(LogDirectory);
+            }
+
             List<LogEntry> existingLogs = new List<LogEntry>();
 
             if (File.Exists(fullPath))

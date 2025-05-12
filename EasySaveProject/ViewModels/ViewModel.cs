@@ -122,8 +122,8 @@ namespace NS_ViewModel
                     remainingFiles--;
                     remainingSize -= fileSize;
 
-                    stateEntry.CurrentPathSrc = file;
-                    stateEntry.CurrentPathDst = destFile;
+                    stateEntry.CurrentPathSrc = work.Src;
+                    stateEntry.CurrentPathDst = work.Dst;
                     stateEntry.LeftFile = remainingFiles;
                     stateEntry.LeftSize = remainingSize;
                     stateEntry.CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
