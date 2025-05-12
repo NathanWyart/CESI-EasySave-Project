@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using NS_Model;
 using NS_View;
 using System.Xml;
+using static NS_Model.Model;
 
 namespace NS_ViewModel
 {
@@ -19,9 +20,7 @@ namespace NS_ViewModel
         private View view;
         // The language mode can be either "English" or "French".
         private string _languageMode;
-        // Path to the settings file.
-        private readonly string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
-
+        
         // Constructor of the ViewModel.
         public ViewModel()
         {
@@ -69,6 +68,7 @@ namespace NS_ViewModel
             return false;
         }
 
+        // This method executes a single work.
         private void ExecuteSingleWork(Work work)
         {
             Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name} ...");
@@ -95,8 +95,11 @@ namespace NS_ViewModel
                     Progress = 0,
                 };
 
+                // Update the state in the model
                 List<State> stateList = new List<State> { stateEntry };
+                model.UpdateState(stateEntry);
 
+                // Iterate through the files and copy them
                 foreach (string file in files)
                 {
                     if (work.BackupType == BackupType.DIFFERENTIAL && work.LastBackupDate.HasValue)
@@ -129,11 +132,11 @@ namespace NS_ViewModel
                     stateEntry.CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
                     stateEntry.Progress = (int)(((double)(totalSize - remainingSize) / totalSize) * 100);
 
-                    model.UpdateRealTimeState(stateList);
+                    model.UpdateState(stateEntry);
                 }
 
                 stateEntry.StateStatus = "END";
-                model.UpdateRealTimeState(stateList);
+                model.UpdateState(stateEntry);
 
                 work.LastBackupDate = DateTime.Now;
                 model.SaveWorks();
@@ -145,6 +148,7 @@ namespace NS_ViewModel
         }
 
 
+        // This method executes a work based on the command given by the user.
         public void ExecuteWork(string command)
         {
             var indicesToExecute = new List<int>();
@@ -228,9 +232,9 @@ namespace NS_ViewModel
 
         private void LoadSettings()
         {
-            if (File.Exists(settingsPath))
+            if (File.Exists(Model.AppPaths.SettingsPath))
             {
-                var json = File.ReadAllText(settingsPath);
+                var json = File.ReadAllText(Model.AppPaths.SettingsPath);
                 dynamic settings = JsonConvert.DeserializeObject(json);
                 _languageMode = settings.Language ?? "English";
             }
@@ -246,7 +250,7 @@ namespace NS_ViewModel
         {
             var settings = new { Language = _languageMode };
             var json = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);
-            File.WriteAllText(settingsPath, json);
+            File.WriteAllText(Model.AppPaths.SettingsPath, json);
         }
 
         // This method returns the translation for a given key.
