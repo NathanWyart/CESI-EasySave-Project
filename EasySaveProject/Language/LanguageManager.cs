@@ -48,7 +48,11 @@ namespace NS_ViewModel
                     { "InvalidRange", "Invalid Range." },
                     { "InvalidBackupIndex", "Invalid Backup Work Index." },
                     { "EnterWorkIndexes", "Enter the indexes of the backups to be run (ex. 1-3 or 1;3) : " },
-                    { "LastBackupUpdate", "Last Backup Update :" }
+                    { "LastBackupUpdate", "Last Backup Update :" },
+                    { "LogFormat", "Log format" },
+                    { "ChangeLogFormat", "Change log format" },
+                    { "LogFormatSwitchedTo", "Log format switched to" },
+                    { "LogFormatChangedSuccessfully", "Log format changed successfully." }
                 }
             },
             {
@@ -91,7 +95,11 @@ namespace NS_ViewModel
                     { "InvalidRange", "Plage invalide." },
                     { "InvalidBackupIndex", "Index de sauvegarde invalide." },
                     { "EnterWorkIndexes", "Entrez les index des sauvegardes à exécuter (ex: 1-3 ou 1;3) : " },
-                    { "LastBackupUpdate", "Dernière mise à jour :" }
+                    { "LastBackupUpdate", "Dernière mise à jour :" },
+                    { "LogFormat", "Format des logs" },
+                    { "ChangeLogFormat", "Changer le format des logs" },
+                    { "LogFormatSwitchedTo", "Format des logs changé en" },
+                    { "LogFormatChangedSuccessfully", "Le format des logs a été modifié avec succès." }
                 }
             }
         };
