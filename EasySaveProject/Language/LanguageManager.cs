@@ -50,7 +50,8 @@ namespace NS_ViewModel
                     { "InvalidBackupIndex", "Invalid Backup Work Index." },
                     { "EnterWorkIndexes", "Enter the indexes of the backups to be run (ex. 1-3 or 1;3) : " },
                     { "LastBackupUpdate", "Last Backup Update :" },
-                    { "EncryptionSettings", "Encryption Settings" }
+                    { "EncryptionSettings", "Encryption Settings" },
+                    { "Reset", "Reset" },
                 }
             },
             {
@@ -95,7 +96,8 @@ namespace NS_ViewModel
                     { "InvalidBackupIndex", "Index de sauvegarde invalide." },
                     { "EnterWorkIndexes", "Entrez les index des sauvegardes à exécuter (ex: 1-3 ou 1;3) : " },
                     { "LastBackupUpdate", "Dernière mise à jour :" },
-                    { "EncryptionSettings", "Paramètres de Cryptage" }
+                    { "EncryptionSettings", "Paramètres de Cryptage" },
+                    { "Reset", "Réinitialisation" },
                 }
             }
         };

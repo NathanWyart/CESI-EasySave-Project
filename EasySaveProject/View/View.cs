@@ -188,7 +188,9 @@ namespace NS_View
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("EncryptionSettings")} ===\n");
                 Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
-                Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage"));
+                Console.WriteLine("1 : " + _viewModel.GetTranslation("Reset"));
+                Console.WriteLine("2 : " + "");
+
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 

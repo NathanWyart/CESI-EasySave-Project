@@ -6,18 +6,52 @@ using System.Threading.Tasks;
 
 namespace EasySaveProject.Model
 {
-    internal class CryptoSoft
-    {
-        public static void AddEncryption(string FileName)
+    public enum CryptoResult
         {
-
-            File.Encrypt(FileName);
+            Success,
+            FileNotFound,
+            InvalidPath,
+            Error
         }
 
-        // Decrypt a file.
-        public static void RemoveEncryption(string FileName)
+    internal class CryptoSoft
+    {
+        public CryptoResult EncryptFile(string filePath)
         {
-            File.Decrypt(FileName);
+            if (string.IsNullOrWhiteSpace(filePath))
+                return CryptoResult.InvalidPath;
+
+            if (!File.Exists(filePath))
+                return CryptoResult.FileNotFound;
+
+            try
+            {
+                File.Encrypt(filePath);
+                return CryptoResult.Success;
+            }
+            catch
+            {
+                return CryptoResult.Error;
+            }
+        }
+
+        public CryptoResult DecryptFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return CryptoResult.InvalidPath;
+
+            if (!File.Exists(filePath))
+                return CryptoResult.FileNotFound;
+
+            try
+            {
+                File.Decrypt(filePath);
+                return CryptoResult.Success;
+            }
+            catch
+            {
+                return CryptoResult.Error;
+            }
         }
     }
 }
