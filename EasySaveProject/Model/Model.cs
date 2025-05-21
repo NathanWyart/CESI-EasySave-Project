@@ -96,7 +96,7 @@ namespace NS_Model
         }
 
         // Function to write log entries to a log file
-        public void LogAction(string backupName, string source, string destination, long size, double transferTime)
+        public void LogAction(string backupName, string source, string destination, long size, double transferTime, double encryptionTime = 0)
         {
             Logger.LogDirectory = AppPaths.LogsDirectory;
 
@@ -107,6 +107,7 @@ namespace NS_Model
                 FileDestination = destination,
                 FileSize = size,
                 FileTransferTime = transferTime,
+                FileEncryptionTime = encryptionTime,
                 Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
             });
         }

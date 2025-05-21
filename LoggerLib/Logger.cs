@@ -14,6 +14,7 @@ namespace LoggerLib
         public string FileDestination { get; set; }
         public long FileSize { get; set; }
         public double FileTransferTime { get; set; } 
+        public double FileEncryptionTime { get; set; }
         public string Time { get; set; }
     }
 
@@ -51,7 +52,6 @@ namespace LoggerLib
             string newJson = JsonSerializer.Serialize(existingLogs, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fullPath, newJson);
         }
-
 
         public static List<LogEntry> ReadLogs(string date)
         {
@@ -93,6 +93,14 @@ namespace LoggerLib
                 Console.WriteLine($"Fichier Cible: {log.FileDestination}");
                 Console.WriteLine($"Taille (octets): {log.FileSize}");
                 Console.WriteLine($"Durée de transfert (ms): {log.FileTransferTime:F3}");
+                if (log.FileEncryptionTime == 0)
+                {
+                    Console.WriteLine($"Non crypté");
+                }
+                else
+                {
+                    Console.WriteLine($"Durée de cryptage (ms): { log.FileEncryptionTime:F3}");
+                }
                 Console.WriteLine($"Heure: {log.Time}");
                 Console.WriteLine("--------------------------------------");
             }

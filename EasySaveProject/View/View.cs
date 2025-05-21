@@ -151,6 +151,44 @@ namespace NS_View
                 Console.WriteLine($"=== {_viewModel.GetTranslation("Settings")} ===\n");
                 Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage"));
+                Console.WriteLine("2 : " + _viewModel.GetTranslation("EncryptionTargets"));
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("Back"));
+                Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
+
+                // Get user input and validate it.
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 3)
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            _viewModel.ToggleLanguage();
+                            Console.WriteLine(_viewModel.GetTranslation("PressEnter"));
+                            Console.ReadLine();
+                            break;
+                        case 2:
+                            DisplayEncryptionSettings();
+                            break;
+                        case 3:
+                            return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(_viewModel.GetTranslation("InvalidInput"));
+                    Console.ReadLine();
+                }
+            }
+        }
+
+        public void DisplayEncryptionSettings()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
+                Console.WriteLine($"=== {_viewModel.GetTranslation("EncryptionSettings")} ===\n");
+                Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
+                Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage"));
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 

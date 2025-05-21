@@ -36,6 +36,7 @@ namespace NS_ViewModel
                     { "AllExecuted", "All works executed. Press Enter to continue..." },
                     { "LanguageMode", "Language Mode" },
                     { "ChangeLanguage", "Change Language Mode" },
+                    { "EncryptionTargets",  "Select the extensions to encrypt"},
                     { "EnterName", "Name:" },
                     { "EnterSource", "Source:" },
                     { "EnterDestination", "Destination:" },
@@ -48,7 +49,8 @@ namespace NS_ViewModel
                     { "InvalidRange", "Invalid Range." },
                     { "InvalidBackupIndex", "Invalid Backup Work Index." },
                     { "EnterWorkIndexes", "Enter the indexes of the backups to be run (ex. 1-3 or 1;3) : " },
-                    { "LastBackupUpdate", "Last Backup Update :" }
+                    { "LastBackupUpdate", "Last Backup Update :" },
+                    { "EncryptionSettings", "Encryption Settings" }
                 }
             },
             {
@@ -79,6 +81,7 @@ namespace NS_ViewModel
                     { "AllExecuted", "Tous les travaux ont été exécutés. Appuyez sur Entrée pour continuer..." },
                     { "LanguageMode", "Langue" },
                     { "ChangeLanguage", "Changer la langue" },
+                    { "EncryptionTargets",  "Sélectionner les extensions à encrypter"},
                     { "EnterName", "Nom :" },
                     { "EnterSource", "Source :" },
                     { "EnterDestination", "Destination :" },
@@ -91,7 +94,8 @@ namespace NS_ViewModel
                     { "InvalidRange", "Plage invalide." },
                     { "InvalidBackupIndex", "Index de sauvegarde invalide." },
                     { "EnterWorkIndexes", "Entrez les index des sauvegardes à exécuter (ex: 1-3 ou 1;3) : " },
-                    { "LastBackupUpdate", "Dernière mise à jour :" }
+                    { "LastBackupUpdate", "Dernière mise à jour :" },
+                    { "EncryptionSettings", "Paramètres de Cryptage" }
                 }
             }
         };
