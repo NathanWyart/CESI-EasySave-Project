@@ -5,5 +5,12 @@
     "Dst": "C:\\Users\\nwyar\\Desktop\\Test",
     "BackupType": 0,
     "LastBackupDate": "2025-05-12T16:14:11.0788328+02:00"
+  },
+  {
+    "Name": "test",
+    "Src": "C:\\Users\\H-obby\\CESI-EasySave-Project\\tests\\New folder",
+    "Dst": "C:\\Users\\H-obby\\CESI-EasySave-Project\\tests\\destination",
+    "BackupType": 0,
+    "LastBackupDate": "2025-05-22T23:30:53.2123349+02:00"
   }
 ]

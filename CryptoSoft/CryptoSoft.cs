@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.IO;
 
 namespace Encryption
 {
-    internal class CryptoSoft
+    public class CryptoSoft
     {
         public double EncryptFile(string filePath)
         {

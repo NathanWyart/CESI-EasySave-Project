@@ -1,5 +1,5 @@
 {
   "Language": "English",
-  "LogFormat": "JSON",
-  "Extensions": ""
+  "Extensions": ".txt",
+  "LogFormat": "JSON"
 }

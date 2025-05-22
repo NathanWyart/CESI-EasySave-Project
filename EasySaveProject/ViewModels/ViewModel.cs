@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using NS_Model;
 using NS_View;
 using System.Xml;
+using Encryption;
 using static NS_Model.Model;
 
 namespace NS_ViewModel
@@ -70,7 +71,6 @@ namespace NS_ViewModel
             return false;
         }
 
-        // This method executes a single work.
         private void ExecuteSingleWork(Work work)
         {
             Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name} ...");
@@ -101,7 +101,11 @@ namespace NS_ViewModel
                 List<State> stateList = new List<State> { stateEntry };
                 model.UpdateState(stateEntry);
 
-                // Iterate through the files and copy them
+                // Prepare encrypted extensions
+                var encryptedExts = (_encryptedExtensions ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(e => e.StartsWith('.') ? e : "." + e).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                var cryptoSoft = new CryptoSoft();
+
                 foreach (string file in files)
                 {
                     if (work.BackupType == BackupType.DIFFERENTIAL && work.LastBackupDate.HasValue)
@@ -116,13 +120,34 @@ namespace NS_ViewModel
                     Directory.CreateDirectory(Path.GetDirectoryName(destFile));
 
                     var watch = System.Diagnostics.Stopwatch.StartNew();
-                    File.Copy(file, destFile, true);
+                    double encryptionTime = 0;
+
+                    string fileExt = Path.GetExtension(file);
+                    if (encryptedExts.Contains(fileExt))
+                    {
+                        // Encrypt using CryptoSoft
+                        try
+                        {
+                            File.Copy(file, destFile, true);
+                            encryptionTime = cryptoSoft.EncryptFile(destFile);
+                            Console.WriteLine($"Encryption succesful");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Encryption error: {ex.Message}");
+                            File.Copy(file, destFile, true);
+                        }
+                    }
+                    else
+                    {
+                        File.Copy(file, destFile, true);
+                    }
                     watch.Stop();
 
                     long fileSize = new FileInfo(file).Length;
                     long duration = watch.ElapsedMilliseconds;
 
-                    model.LogAction(work.Name, file, destFile, fileSize, duration, GetCurrentLogFormat());
+                    model.LogAction(work.Name, file, destFile, fileSize, duration, GetCurrentLogFormat(), encryptionTime);
 
                     remainingFiles--;
                     remainingSize -= fileSize;
