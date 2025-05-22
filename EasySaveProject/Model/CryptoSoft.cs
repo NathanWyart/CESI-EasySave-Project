@@ -3,54 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
-namespace EasySaveProject.Model
+namespace Encryption
 {
-    public enum CryptoResult
-        {
-            Success,
-            FileNotFound,
-            InvalidPath,
-            Error
-        }
-
     internal class CryptoSoft
     {
-        public CryptoResult EncryptFile(string filePath)
+        public double EncryptFile(string filePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                return CryptoResult.InvalidPath;
-
-            if (!File.Exists(filePath))
-                return CryptoResult.FileNotFound;
-
             try
             {
+                var stopwatch = Stopwatch.StartNew();
                 File.Encrypt(filePath);
-                return CryptoResult.Success;
+                stopwatch.Stop();
+                return stopwatch.Elapsed.TotalMilliseconds;
             }
             catch
             {
-                return CryptoResult.Error;
+                return -1;
             }
         }
 
-        public CryptoResult DecryptFile(string filePath)
+        public int DecryptFile(string filePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                return CryptoResult.InvalidPath;
-
-            if (!File.Exists(filePath))
-                return CryptoResult.FileNotFound;
-
             try
             {
                 File.Decrypt(filePath);
-                return CryptoResult.Success;
+                return 0;
             }
             catch
             {
-                return CryptoResult.Error;
+                return -1;
             }
         }
     }
