@@ -96,9 +96,18 @@ namespace NS_Model
         }
 
         // Function to write log entries to a log file
-        public void LogAction(string backupName, string source, string destination, long size, double transferTime, double encryptionTime = 0)
+        public void LogAction(string backupName, string source, string destination, long size, double transferTime, string logFormat, double encryptionTime = 0)
         {
             Logger.LogDirectory = AppPaths.LogsDirectory;
+
+            if (Enum.TryParse(logFormat, true, out LogFormat format))
+            {
+                Logger.CurrentLogFormat = format;
+            }
+            else
+            {
+                Logger.CurrentLogFormat = LogFormat.JSON; // fallback
+            }
 
             Logger.WriteLog(new LogEntry
             {

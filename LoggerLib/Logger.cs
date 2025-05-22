@@ -4,9 +4,16 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Xml;
 
 namespace LoggerLib
 {
+    public enum LogFormat
+    {
+        JSON,
+        XML
+    }
+
     public class LogEntry
     {
         public string Name { get; set; }
@@ -21,8 +28,9 @@ namespace LoggerLib
     public static class Logger
     {
         public static string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+        public static LogFormat CurrentLogFormat { get; set; } = LogFormat.JSON;
 
-        public static void WriteLog(LogEntry entry)
+        public static void WriteLogJson(LogEntry entry)
         {
             string fileName = $"{DateTime.Now:yyyy-MM-dd}.json";
             string fullPath = Path.Combine(LogDirectory, fileName);
@@ -53,6 +61,58 @@ namespace LoggerLib
             File.WriteAllText(fullPath, newJson);
         }
 
+        private static void WriteLogXml(LogEntry entry)
+        {
+            string fileName = $"{DateTime.Now:yyyy-MM-dd}.xml";
+            string fullPath = Path.Combine(LogDirectory, fileName);
+
+            var doc = new XmlDocument();
+            XmlElement root;
+
+            if (File.Exists(fullPath))
+            {
+                doc.Load(fullPath);
+                root = doc.DocumentElement;
+            }
+            else
+            {
+                root = doc.CreateElement("Logs");
+                doc.AppendChild(root);
+            }
+
+            XmlElement log = doc.CreateElement("Log");
+
+            void AddElem(string name, string value)
+            {
+                var elem = doc.CreateElement(name);
+                elem.InnerText = value;
+                log.AppendChild(elem);
+            }
+
+            AddElem("Name", entry.Name);
+            AddElem("FileSource", entry.FileSource);
+            AddElem("FileDestination", entry.FileDestination);
+            AddElem("FileSize", entry.FileSize.ToString());
+            AddElem("FileTransferTime", entry.FileTransferTime.ToString("F3"));
+            AddElem("Time", entry.Time);
+
+            root.AppendChild(log);
+            doc.Save(fullPath);
+        }
+
+        public static void WriteLog(LogEntry entry)
+        {
+            switch (CurrentLogFormat)
+            {
+                case LogFormat.JSON:
+                    WriteLogJson(entry);
+                    break;
+                case LogFormat.XML:
+                    WriteLogXml(entry);
+                    break;
+            }
+        }
+
         public static List<LogEntry> ReadLogs(string date)
         {
             string fileName = $"{date}.json";
@@ -72,7 +132,7 @@ namespace LoggerLib
 
             if (logs.Count == 0)
             {
-                Console.WriteLine("Aucun log trouvé pour cette date.");
+                Console.WriteLine("Aucun log trouvÃ© pour cette date.");
                 return;
             }
 
@@ -92,14 +152,14 @@ namespace LoggerLib
                 Console.WriteLine($"Fichier Source: {log.FileSource}");
                 Console.WriteLine($"Fichier Cible: {log.FileDestination}");
                 Console.WriteLine($"Taille (octets): {log.FileSize}");
-                Console.WriteLine($"Durée de transfert (ms): {log.FileTransferTime:F3}");
+                Console.WriteLine($"DurÃ©e de transfert (ms): {log.FileTransferTime:F3}");
                 if (log.FileEncryptionTime == 0)
                 {
-                    Console.WriteLine($"Non crypté");
+                    Console.WriteLine($"Non cryptï¿½");
                 }
                 else
                 {
-                    Console.WriteLine($"Durée de cryptage (ms): { log.FileEncryptionTime:F3}");
+                    Console.WriteLine($"DurÃ©e de cryptage (ms): { log.FileEncryptionTime:F3}");
                 }
                 Console.WriteLine($"Heure: {log.Time}");
                 Console.WriteLine("--------------------------------------");

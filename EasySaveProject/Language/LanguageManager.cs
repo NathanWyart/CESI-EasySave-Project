@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace NS_ViewModel
 {
@@ -52,6 +52,10 @@ namespace NS_ViewModel
                     { "LastBackupUpdate", "Last Backup Update :" },
                     { "EncryptionSettings", "Encryption Settings" },
                     { "Reset", "Reset" },
+                    { "LogFormat", "Log format" },
+                    { "ChangeLogFormat", "Change log format" },
+                    { "LogFormatSwitchedTo", "Log format switched to" },
+                    { "LogFormatChangedSuccessfully", "Log format changed successfully." }
                 }
             },
             {
@@ -98,6 +102,10 @@ namespace NS_ViewModel
                     { "LastBackupUpdate", "Dernière mise à jour :" },
                     { "EncryptionSettings", "Paramètres de Cryptage" },
                     { "Reset", "Réinitialisation" },
+                    { "LogFormat", "Format des logs" },
+                    { "ChangeLogFormat", "Changer le format des logs" },
+                    { "LogFormatSwitchedTo", "Format des logs changé en" },
+                    { "LogFormatChangedSuccessfully", "Le format des logs a été modifié avec succès." }
                 }
             }
         };

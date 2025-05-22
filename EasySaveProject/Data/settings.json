@@ -1,4 +1,5 @@
 {
-  "Language": "French",
+  "Language": "English",
+  "LogFormat": "JSON",
   "Extensions": ""
 }

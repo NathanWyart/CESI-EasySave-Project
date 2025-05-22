@@ -150,13 +150,15 @@ namespace NS_View
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("Settings")} ===\n");
                 Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
-                Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage"));
-                Console.WriteLine("2 : Change encripted extensions");
-                Console.WriteLine("3 : " + _viewModel.GetTranslation("Back"));
+                Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage") + "\n");
+                Console.WriteLine(_viewModel.GetTranslation("LogFormat") + $" : {_viewModel.GetCurrentLogFormat()}");
+                Console.WriteLine("2 : " + _viewModel.GetTranslation("ChangeLogFormat") + "\n");
+                Console.WriteLine("3 : Change encripted extensions");
+                Console.WriteLine("4 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
                 // Get user input and validate it.
-                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 3)
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 4)
                 {
                     switch (choice)
                     {
@@ -164,9 +166,14 @@ namespace NS_View
                             _viewModel.ToggleLanguage();
                             break;
                         case 2:
-                            DisplayEncryptionSettings();
+                        _viewModel.ToggleLogFormat();
+                            Console.WriteLine(_viewModel.GetTranslation("PressEnter"));
+                            Console.ReadLine();
                             break;
                         case 3:
+                            DisplayEncryptionSettings();
+                            break;
+                        case 4:
                             return;
                     }
                 }

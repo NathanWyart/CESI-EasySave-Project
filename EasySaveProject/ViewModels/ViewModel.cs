@@ -122,7 +122,7 @@ namespace NS_ViewModel
                     long fileSize = new FileInfo(file).Length;
                     long duration = watch.ElapsedMilliseconds;
 
-                    model.LogAction(work.Name, file, destFile, fileSize, duration);
+                    model.LogAction(work.Name, file, destFile, fileSize, duration, GetCurrentLogFormat());
 
                     remainingFiles--;
                     remainingSize -= fileSize;
@@ -256,6 +256,7 @@ namespace NS_ViewModel
         // This method returns the current language mode.
         public string GetCurrentLanguage() => _languageMode;
         public string GetEncryptedExtensions() => _encryptedExtensions;
+        private string _logFormat;
 
         private void LoadSettings()
         {
@@ -265,25 +266,36 @@ namespace NS_ViewModel
                 dynamic settings = JsonConvert.DeserializeObject(json);
                 _languageMode = settings.Language ?? "English";
                 _encryptedExtensions = settings.Extensions ?? "";
+                _logFormat = settings.LogFormat ?? "JSON";
             }
             else
             {
                 _languageMode = "English";
                 _encryptedExtensions = "";
+                _logFormat = "JSON";
                 SaveSettings();
             }
         }
-
-        // This method saves the current settings to a file.
         private void SaveSettings()
         {
             var settings = new {
                 Language = _languageMode,
-                Extensions = _encryptedExtensions 
+                Extensions = _encryptedExtensions,
+                LogFormat = _logFormat
             };
             var json = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(Model.AppPaths.SettingsPath, json);
         }
+
+        public void ToggleLogFormat()
+        {
+            _logFormat = _logFormat == "JSON" ? "XML" : "JSON";
+            SaveSettings();
+            Console.WriteLine($"{GetTranslation("LogFormatSwitchedTo")} {_logFormat}");
+        }
+
+        public string GetCurrentLogFormat() => _logFormat;
+
 
         // This method returns the translation for a given key.
         public string GetTranslation(string key)
