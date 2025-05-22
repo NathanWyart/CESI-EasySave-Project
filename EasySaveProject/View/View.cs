@@ -151,7 +151,7 @@ namespace NS_View
                 Console.WriteLine($"=== {_viewModel.GetTranslation("Settings")} ===\n");
                 Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage"));
-                Console.WriteLine("2 : " + _viewModel.GetTranslation("EncryptionTargets"));
+                Console.WriteLine("2 : Change encripted extensions");
                 Console.WriteLine("3 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
@@ -162,8 +162,6 @@ namespace NS_View
                     {
                         case 1:
                             _viewModel.ToggleLanguage();
-                            Console.WriteLine(_viewModel.GetTranslation("PressEnter"));
-                            Console.ReadLine();
                             break;
                         case 2:
                             DisplayEncryptionSettings();
@@ -187,24 +185,41 @@ namespace NS_View
                 Console.Clear();
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("EncryptionSettings")} ===\n");
-                Console.WriteLine(_viewModel.GetTranslation("LanguageMode") + $" : {_viewModel.GetCurrentLanguage()}");
+                Console.WriteLine($"Current Encrypted Extensions : {_viewModel.GetEncryptedExtensions()}");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("Reset"));
-                Console.WriteLine("2 : " + "");
-
-                Console.WriteLine("2 : " + _viewModel.GetTranslation("Back"));
+                Console.WriteLine("2 : " + "Set extensions to encrypt");
+                Console.WriteLine("3 : " + "Add extensions to encrypt");
+                Console.WriteLine("4 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
                 // Get user input and validate it.
-                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 2)
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 4)
                 {
                     switch (choice)
                     {
                         case 1:
-                            _viewModel.ToggleLanguage();
-                            Console.WriteLine(_viewModel.GetTranslation("PressEnter"));
-                            Console.ReadLine();
+                            Console.WriteLine("Confirm reset ? (Y/N) : ");
+                            string? choice1 = Console.ReadLine();
+                            if (choice1 == "Y" || choice1 == "y")
+                                _viewModel.SetEncryptedExtensions("");
                             break;
                         case 2:
+                            Console.WriteLine("Enter the extensions to encrypt (ex. .txt;.docx) : ");
+                            string? extensions = Console.ReadLine();
+                            Console.WriteLine($"Confirm Change from '{_viewModel.GetEncryptedExtensions()}' to '{extensions}' ? (Y/N) : ");
+                            string? choice2 = Console.ReadLine();
+                            if (choice2 == "Y" || choice2 == "y")
+                                _viewModel.SetEncryptedExtensions(extensions);
+                            break;
+                        case 3:
+                            Console.WriteLine("Enter the extensions to add (ex. .txt;.docx) : ");
+                            string? extensions2 = Console.ReadLine();
+                            Console.WriteLine($"Confirm Change from '{_viewModel.GetEncryptedExtensions()}' to '{_viewModel.GetEncryptedExtensions()};{extensions2}' ? (Y/N) : ");
+                            string? choice3 = Console.ReadLine();
+                            if (choice3 == "Y" || choice3 == "y")
+                                _viewModel.AddEncryptedExtension(extensions2);
+                            break;
+                        case 4:
                             return;
                     }
                 }

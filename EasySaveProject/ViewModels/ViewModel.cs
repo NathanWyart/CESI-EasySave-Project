@@ -20,6 +20,8 @@ namespace NS_ViewModel
         private View view;
         // The language mode can be either "English" or "French".
         private string _languageMode;
+
+        private string _encryptedExtensions;
         
         // Constructor of the ViewModel.
         public ViewModel()
@@ -227,8 +229,33 @@ namespace NS_ViewModel
             Console.WriteLine($"{GetTranslation("LanguageSwitchedTo")} {_languageMode}");
         }
 
+        public void SetEncryptedExtensions(string? extensions) // Set the encrypted extensions
+        {
+            if (extensions != null)
+                _encryptedExtensions = extensions;
+            SaveSettings();
+        }
+
+        public void AddEncryptedExtension(string? extension) // Add an encrypted extension
+        {
+            if (extension == null)
+                return;
+
+            if (_encryptedExtensions == "")
+            {
+                _encryptedExtensions += extension;
+                SaveSettings();
+            }
+            else if (!_encryptedExtensions.Contains(extension))
+            {
+                _encryptedExtensions += $";{extension}";
+                SaveSettings();
+            }
+        }
+
         // This method returns the current language mode.
         public string GetCurrentLanguage() => _languageMode;
+        public string GetEncryptedExtensions() => _encryptedExtensions;
 
         private void LoadSettings()
         {
@@ -237,10 +264,12 @@ namespace NS_ViewModel
                 var json = File.ReadAllText(Model.AppPaths.SettingsPath);
                 dynamic settings = JsonConvert.DeserializeObject(json);
                 _languageMode = settings.Language ?? "English";
+                _encryptedExtensions = settings.Extensions ?? "";
             }
             else
             {
                 _languageMode = "English";
+                _encryptedExtensions = "";
                 SaveSettings();
             }
         }
@@ -248,7 +277,10 @@ namespace NS_ViewModel
         // This method saves the current settings to a file.
         private void SaveSettings()
         {
-            var settings = new { Language = _languageMode };
+            var settings = new {
+                Language = _languageMode,
+                Extensions = _encryptedExtensions 
+            };
             var json = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(Model.AppPaths.SettingsPath, json);
         }
