@@ -26,12 +26,13 @@ namespace NS_View
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("BackupWorkMenu"));
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("ExecutionMenu"));
-                Console.WriteLine("3 : " + _viewModel.GetTranslation("Settings"));
-                Console.WriteLine("4 : " + _viewModel.GetTranslation("Quit"));
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("GestionMetierLogiciel"));
+                Console.WriteLine("4 : " + _viewModel.GetTranslation("Settings"));
+                Console.WriteLine("5 : " + _viewModel.GetTranslation("Quit"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
                 // Get user input and validate it.
-                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 4)
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 5)
                 {
                     switch (choice)
                     {
@@ -42,9 +43,12 @@ namespace NS_View
                             DisplayExecutionMenu();
                             break;
                         case 3:
-                            DisplaySettingsMenu();
+                            DisplaySoftwareMenu();
                             break;
                         case 4:
+                            DisplaySettingsMenu();
+                            break;
+                        case 5:
                             Console.WriteLine(_viewModel.GetTranslation("Exiting"));
                             return;
                     }
@@ -131,6 +135,53 @@ namespace NS_View
                             break;
                         case 3:
                             return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(_viewModel.GetTranslation("InvalidInput"));
+                    Console.ReadLine();
+                }
+            }
+        }
+
+        // Displays the buisness softwares menu.
+        public void DisplaySoftwareMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
+                Console.WriteLine($"=== {_viewModel.GetTranslation("SoftwareMenu")} ===\n");
+                Console.WriteLine("1 : " + _viewModel.GetTranslation ("ShowSoftwares"));
+                Console.WriteLine("2 : " + _viewModel.GetTranslation("AddSoftware"));
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("RemoveSoftware"));
+                Console.WriteLine("4 : " + _viewModel.GetTranslation("Back"));
+                Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
+
+                // Get user input and validate it.
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 5)
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            _viewModel.ShowSoftwares();
+                            Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
+                            Console.ReadLine();
+                            break;
+                        case 2:
+                            _viewModel.AddSoftware();
+                            Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
+                            Console.ReadLine();
+                            break;
+                        case 3:
+                            _viewModel.RemoveSoftware();
+                            Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
+                            Console.ReadLine();
+                            break;
+                        case 4:
+                            return;
+
                     }
                 }
                 else

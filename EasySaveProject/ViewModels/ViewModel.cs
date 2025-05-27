@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using Encryption;
 using Newtonsoft.Json;
 using NS_Model;
 using NS_View;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
-using Encryption;
 using static NS_Model.Model;
 
 namespace NS_ViewModel
@@ -36,6 +37,7 @@ namespace NS_ViewModel
         public void Run()
         {
             view.Menu();
+
         }
 
         // This method returns the list of works.
@@ -363,6 +365,77 @@ namespace NS_ViewModel
         public string GetTranslation(string key)
         {
             return LanguageManager.GetTranslation(key, _languageMode);
+        }
+
+        // List of buisness softwares 
+        public List<string> softwares = new List<string>();
+
+        // Show the list of Buisness Softwares
+        public void ShowSoftwares()
+        {
+            Console.WriteLine("Liste des logiciels métier :");
+            if (softwares.Count == 0)
+            {
+                Console.WriteLine("La liste est vide.");
+            }
+            else
+            {
+                for (int i = 0; i < softwares.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {softwares[i]}");
+                }
+            }
+        }
+
+        // Add a software to the list
+        public void AddSoftware()
+        {
+            Console.Write("Entrez le nom du logiciel (ex: notepad++.exe) : ");
+            string software = Console.ReadLine();
+            softwares.Add(software);
+            Console.WriteLine($"Le logiciel '{software}' a été ajouté.");
+        }
+
+        // Remove a software from the list
+        public void RemoveSoftware()
+        {
+            ShowSoftwares();
+            if (softwares.Count == 0)
+            {
+                return;
+            }
+
+            Console.Write("Entrez le numéro du logiciel à supprimer : ");
+            if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= softwares.Count)
+            {
+                string software = softwares[index - 1];
+                softwares.RemoveAt(index - 1);
+                Console.WriteLine($"Le logiciel '{software}' a été supprimé.");
+            }
+            else
+            {
+                Console.WriteLine("Numéro invalide.");
+            }
+        }
+
+        //Return true if a buisness software is runing
+        public bool GetSoftware()
+        {
+            if (softwares.Count == 0)
+            {
+                return false;
+            }
+            for (int i = 0; i < softwares.Count; i++)
+            {
+                Process[] processus = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(softwares[i]));
+                //Process[] processes = Process.GetProcessesByName(softwares[i]);
+                if (processus.Length > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+
         }
     }
 }
