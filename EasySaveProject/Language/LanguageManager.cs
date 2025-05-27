@@ -27,6 +27,10 @@ namespace NS_ViewModel
                     { "AddBackup", "Add a Backup Work" },
                     { "DeleteBackup", "Delete a Backup Work" },
                     { "ListBackup", "List Backup Works" },
+                    { "SoftwareMenu", "Buisness Softwares Management" },
+                    { "AddSoftware", "Add a Buisness Software" },
+                    { "RemoveSoftware", "Delete a Buisness Software" },
+                    { "ShowSoftwares", "List Buisness Softwares" },
                     { "Back", "Back" },
                     { "PressEnter", "Press Enter to continue..." },
                     { "ExecuteOne", "Execute a Backup Work" },
@@ -56,6 +60,7 @@ namespace NS_ViewModel
                     { "ChangeLogFormat", "Change log format" },
                     { "LogFormatSwitchedTo", "Log format switched to" },
                     { "LogFormatChangedSuccessfully", "Log format changed successfully." }
+
                 }
             },
             {
@@ -77,6 +82,10 @@ namespace NS_ViewModel
                     { "AddBackup", "Ajouter un travail de sauvegarde" },
                     { "DeleteBackup", "Supprimer un travail de sauvegarde" },
                     { "ListBackup", "Lister les travaux de sauvegarde" },
+                    { "SoftwareMenu", "Gestion des logiciels métiers" },
+                    { "AddSoftware", "Ajouter un logiciel métier" },
+                    { "RemoveSoftware", "Supprimer un logiciel métier" },
+                    { "ShowSoftwares", "Lister les logiciels métiers" },
                     { "Back", "Retour" },
                     { "PressEnter", "Appuyez sur Entrée pour continuer..." },
                     { "ExecuteOne", "Exécuter un travail de sauvegarde" },
