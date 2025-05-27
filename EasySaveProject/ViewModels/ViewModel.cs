@@ -24,6 +24,14 @@ namespace NS_ViewModel
         private string _languageMode;
 
         private string _encryptedExtensions;
+        // Ajouter en haut de la classe ViewModel
+
+        // Dans la classe ViewModel
+        private static bool _isBusinessSoftwareRunning = false;
+        private System.Timers.Timer _softwareCheckTimer;
+
+        // Propriété publique pour accéder à l'état
+        public static bool IsBusinessSoftwareRunning => _isBusinessSoftwareRunning;
 
         // Constructor of the ViewModel.
         public ViewModel()
@@ -31,6 +39,12 @@ namespace NS_ViewModel
             view = new View(this); // Initialize the view
             model.LoadWorks(); // Load works at the start
             LoadSettings(); // Load settings at the start
+
+            // Initialiser et démarrer le timer de surveillance
+            _softwareCheckTimer = new System.Timers.Timer(1000); // Vérifie toutes les secondes
+            _softwareCheckTimer.Elapsed += (s, e) => CheckBusinessSoftwareProcesses();
+            _softwareCheckTimer.AutoReset = true;
+            _softwareCheckTimer.Start();
         }
 
         // This method is called to run the application.
@@ -322,6 +336,7 @@ namespace NS_ViewModel
         public string GetEncryptedExtensions() => _encryptedExtensions;
         private string _logFormat;
 
+        // Remplacer la méthode LoadSettings
         private void LoadSettings()
         {
             if (File.Exists(Model.AppPaths.SettingsPath))
@@ -331,21 +346,26 @@ namespace NS_ViewModel
                 _languageMode = settings.Language ?? "English";
                 _encryptedExtensions = settings.Extensions ?? "";
                 _logFormat = settings.LogFormat ?? "JSON";
+                softwares = settings.SteveJobs is IEnumerable<object> steveJobsCollection ? steveJobsCollection.Select(s => s.ToString()).ToList() : new List<string>();
             }
             else
             {
                 _languageMode = "English";
                 _encryptedExtensions = "";
                 _logFormat = "JSON";
+                softwares = new List<string>();
                 SaveSettings();
             }
         }
+        // Remplacer la méthode SaveSettings
         private void SaveSettings()
         {
-            var settings = new {
+            var settings = new
+            {
                 Language = _languageMode,
                 Extensions = _encryptedExtensions,
-                LogFormat = _logFormat
+                LogFormat = _logFormat,
+                SteveJobs = softwares
             };
             var json = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(Model.AppPaths.SettingsPath, json);
@@ -367,7 +387,7 @@ namespace NS_ViewModel
             return LanguageManager.GetTranslation(key, _languageMode);
         }
 
-        // List of buisness softwares 
+        // Remplacer la déclaration de la liste des logiciels métier
         public List<string> softwares = new List<string>();
 
         // Show the list of Buisness Softwares
@@ -387,12 +407,13 @@ namespace NS_ViewModel
             }
         }
 
-        // Add a software to the list
+        // Ajouter un appel à SaveSettings dans AddSoftware et RemoveSoftware
         public void AddSoftware()
         {
             Console.Write("Entrez le nom du logiciel (ex: notepad++.exe) : ");
             string software = Console.ReadLine();
             softwares.Add(software);
+            SaveSettings();
             Console.WriteLine($"Le logiciel '{software}' a été ajouté.");
         }
 
@@ -410,6 +431,7 @@ namespace NS_ViewModel
             {
                 string software = softwares[index - 1];
                 softwares.RemoveAt(index - 1);
+                SaveSettings();
                 Console.WriteLine($"Le logiciel '{software}' a été supprimé.");
             }
             else
@@ -418,24 +440,29 @@ namespace NS_ViewModel
             }
         }
 
-        //Return true if a buisness software is runing
-        public bool GetSoftware()
+        // Nouvelle méthode privée pour surveiller les processus
+        private void CheckBusinessSoftwareProcesses()
         {
-            if (softwares.Count == 0)
+            bool found = false;
+            foreach (var sw in softwares)
             {
-                return false;
-            }
-            for (int i = 0; i < softwares.Count; i++)
-            {
-                Process[] processus = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(softwares[i]));
-                //Process[] processes = Process.GetProcessesByName(softwares[i]);
-                if (processus.Length > 0)
+                if (string.IsNullOrWhiteSpace(sw))
+                    continue;
+                var procs = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(sw));
+                if (procs.Length > 0)
                 {
-                    return true;
+                    found = true;
+                    Console.WriteLine("Process open");
+                    break;
                 }
             }
-            return false;
+            _isBusinessSoftwareRunning = found;
+        }
 
+        // Remplacer la méthode GetSoftware par :
+        public bool GetSoftware()
+        {
+            return _isBusinessSoftwareRunning;
         }
     }
 }
