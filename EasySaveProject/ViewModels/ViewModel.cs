@@ -24,9 +24,6 @@ namespace NS_ViewModel
 
         private string _encryptedExtensions;
 
-        private Semaphore _semaphoreWorks = new Semaphore(10000, 10000);
-        private Semaphore _semaphoreFiles = new Semaphore(10000, 10000);
-
         // Constructor of the ViewModel.
         public ViewModel()
         {
@@ -45,7 +42,7 @@ namespace NS_ViewModel
         public List<Work> GetWorks() => model.Works;
 
         // This method adds a new work to the list of works.
-        public void AddWork(string name, string src, string dst)
+        public void AddWork(string name, string src, string dst, BackupType type)
         {
             // Check the limit of 5 works
             if (model.Works.Count >= 5)
@@ -54,7 +51,7 @@ namespace NS_ViewModel
                 return;
             }
             // Add the work to the model
-            model.AddWork(name, src, dst);
+            model.AddWork(name, src, dst, type);
             model.SaveWorks();
             Console.WriteLine(GetTranslation("BackupAdded"));
         }
@@ -116,9 +113,17 @@ namespace NS_ViewModel
 
                     foreach (string file in files)
                     {
+                        if (work.BackupType == BackupType.DIFFERENTIAL && work.LastBackupDate.HasValue)
+                        {
+                            DateTime lastWriteTime = File.GetLastWriteTime(file);
+                            if (lastWriteTime <= work.LastBackupDate.Value)
+                                continue;
+                        }
+
                         Thread fileThread = new Thread(() =>
                         {
                             Console.WriteLine($"Start copy of file : {file}");
+
                             try
                             {
                                 string relativePath = Path.GetRelativePath(work.Src, file);

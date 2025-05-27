@@ -26,14 +26,14 @@
     },
     {
       "Name": "dd",
-      "TotalFile": 25,
+      "TotalFile": 26,
       "TotalSize": 841137738,
-      "Progress": 100,
-      "LeftFile": 0,
-      "LeftSize": 0,
+      "Progress": 0,
+      "LeftFile": 25,
+      "LeftSize": 841137738,
       "CurrentPathSrc": "C:\\Users\\hobby\\Documents\\D\u0026D",
       "CurrentPathDst": "C:\\Users\\hobby\\CESI-EasySave-Project",
-      "CurrentDateTime": "27/05/2025 14:30:09",
+      "CurrentDateTime": "27/05/2025 16:02:19",
       "StateStatus": "END"
     }
   ]
