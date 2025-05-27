@@ -23,7 +23,10 @@ namespace NS_ViewModel
         private string _languageMode;
 
         private string _encryptedExtensions;
-        
+
+        private Semaphore _semaphoreWorks = new Semaphore(10000, 10000);
+        private Semaphore _semaphoreFiles = new Semaphore(10000, 10000);
+
         // Constructor of the ViewModel.
         public ViewModel()
         {
@@ -42,7 +45,7 @@ namespace NS_ViewModel
         public List<Work> GetWorks() => model.Works;
 
         // This method adds a new work to the list of works.
-        public void AddWork(string name, string src, string dst, BackupType type)
+        public void AddWork(string name, string src, string dst)
         {
             // Check the limit of 5 works
             if (model.Works.Count >= 5)
@@ -51,7 +54,7 @@ namespace NS_ViewModel
                 return;
             }
             // Add the work to the model
-            model.AddWork(name, src, dst, type);
+            model.AddWork(name, src, dst);
             model.SaveWorks();
             Console.WriteLine(GetTranslation("BackupAdded"));
         }
@@ -73,105 +76,134 @@ namespace NS_ViewModel
 
         private void ExecuteSingleWork(Work work)
         {
-            Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name} ...");
-
-            try
+            Thread thread = new Thread(() =>
             {
-                string[] files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
-                int totalFiles = files.Length;
-                long totalSize = files.Sum(f => new FileInfo(f).Length);
-                int remainingFiles = totalFiles;
-                long remainingSize = totalSize;
+                Console.WriteLine($"{GetTranslation("ExecutingBackup")}: {work.Name} ...");
 
-                var stateEntry = new State
+                try
                 {
-                    Name = work.Name,
-                    TotalFile = totalFiles,
-                    TotalSize = totalSize,
-                    LeftFile = remainingFiles,
-                    LeftSize = remainingSize,
-                    StateStatus = "ACTIVE",
-                    CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                    CurrentPathSrc = "",
-                    CurrentPathDst = "",
-                    Progress = 0,
-                };
+                    string[] files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
+                    int totalFiles = files.Length;
+                    long totalSize = files.Sum(f => new FileInfo(f).Length);
+                    int remainingFiles = totalFiles;
+                    long remainingSize = totalSize;
 
-                // Update the state in the model
-                List<State> stateList = new List<State> { stateEntry };
-                model.UpdateState(stateEntry);
-
-                // Prepare encrypted extensions
-                var encryptedExts = (_encryptedExtensions ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(e => e.StartsWith('.') ? e : "." + e).ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-                var cryptoSoft = new CryptoSoft();
-
-                foreach (string file in files)
-                {
-                    if (work.BackupType == BackupType.DIFFERENTIAL && work.LastBackupDate.HasValue)
+                    var stateEntry = new State
                     {
-                        DateTime lastWriteTime = File.GetLastWriteTime(file);
-                        if (lastWriteTime <= work.LastBackupDate.Value)
-                            continue;
-                    }
-
-                    string relativePath = Path.GetRelativePath(work.Src, file);
-                    string destFile = Path.Combine(work.Dst, relativePath);
-                    Directory.CreateDirectory(Path.GetDirectoryName(destFile));
-
-                    var watch = System.Diagnostics.Stopwatch.StartNew();
-                    double encryptionTime = 0;
-
-                    string fileExt = Path.GetExtension(file);
-                    if (encryptedExts.Contains(fileExt))
-                    {
-                        // Encrypt using CryptoSoft
-                        try
-                        {
-                            File.Copy(file, destFile, true);
-                            encryptionTime = cryptoSoft.EncryptFile(destFile);
-                            Console.WriteLine($"Encryption succesful");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Encryption error: {ex.Message}");
-                            File.Copy(file, destFile, true);
-                        }
-                    }
-                    else
-                    {
-                        File.Copy(file, destFile, true);
-                    }
-                    watch.Stop();
-
-                    long fileSize = new FileInfo(file).Length;
-                    long duration = watch.ElapsedMilliseconds;
-
-                    model.LogAction(work.Name, file, destFile, fileSize, duration, GetCurrentLogFormat(), encryptionTime);
-
-                    remainingFiles--;
-                    remainingSize -= fileSize;
-
-                    stateEntry.CurrentPathSrc = work.Src;
-                    stateEntry.CurrentPathDst = work.Dst;
-                    stateEntry.LeftFile = remainingFiles;
-                    stateEntry.LeftSize = remainingSize;
-                    stateEntry.CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                    stateEntry.Progress = (int)(((double)(totalSize - remainingSize) / totalSize) * 100);
+                        Name = work.Name,
+                        TotalFile = totalFiles,
+                        TotalSize = totalSize,
+                        LeftFile = remainingFiles,
+                        LeftSize = remainingSize,
+                        StateStatus = "ACTIVE",
+                        CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                        CurrentPathSrc = "",
+                        CurrentPathDst = "",
+                        Progress = 0,
+                    };
 
                     model.UpdateState(stateEntry);
+
+                    var encryptedExts = (_encryptedExtensions ?? "")
+                        .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                        .Select(e => e.StartsWith('.') ? e : "." + e)
+                        .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                    var cryptoSoft = new CryptoSoft();
+
+                    object stateLock = new object();
+                    List<Thread> fileThreads = new List<Thread>();
+
+                    foreach (string file in files)
+                    {
+                        Thread fileThread = new Thread(() =>
+                        {
+                            Console.WriteLine($"Start copy of file : {file}");
+                            try
+                            {
+                                string relativePath = Path.GetRelativePath(work.Src, file);
+                                string destFile = Path.Combine(work.Dst, relativePath);
+                                Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+
+                                var watch = System.Diagnostics.Stopwatch.StartNew();
+                                double encryptionTime = 0;
+
+                                string fileExt = Path.GetExtension(file);
+                                if (encryptedExts.Contains(fileExt))
+                                {
+                                    try
+                                    {
+                                        File.Copy(file, destFile, true);
+                                        encryptionTime = cryptoSoft.EncryptFile(destFile);
+                                        Console.WriteLine($"Encryption succesful");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"Encryption error: {ex.Message}");
+                                        File.Copy(file, destFile, true);
+                                    }
+                                }
+                                else
+                                {
+                                    File.Copy(file, destFile, true);
+                                }
+                                watch.Stop();
+
+                                long fileSize = new FileInfo(file).Length;
+                                long duration = watch.ElapsedMilliseconds;
+
+                                lock (stateLock)
+                                {
+                                    model.LogAction(work.Name, file, destFile, fileSize, duration, GetCurrentLogFormat(), encryptionTime);
+
+                                    remainingFiles--;
+                                    remainingSize -= fileSize;
+
+                                    stateEntry.CurrentPathSrc = work.Src;
+                                    stateEntry.CurrentPathDst = work.Dst;
+                                    stateEntry.LeftFile = remainingFiles;
+                                    stateEntry.LeftSize = remainingSize;
+                                    stateEntry.CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                                    stateEntry.Progress = (int)(((double)(totalSize - remainingSize) / totalSize) * 100);
+
+                                    model.UpdateState(stateEntry);
+                                }
+
+                                Console.WriteLine($"End copy of file : {file}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"{GetTranslation("FileError")}: {ex.Message}");
+                            }
+                        });
+                        fileThreads.Add(fileThread);
+                        fileThread.Start();
+                    }
+
+                    // Attendre que tous les threads de fichiers soient terminés
+                    foreach (var t in fileThreads)
+                    {
+                        t.Join();
+                    }
+
+                    stateEntry.StateStatus = "END";
+                    model.UpdateState(stateEntry);
+
+                    work.LastBackupDate = DateTime.Now;
+                    model.SaveWorks();
+
+                    Console.WriteLine($"Backup done : {work.Name}");
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{GetTranslation("BackupError")}: {ex.Message}");
+                }
+                finally
+                {
 
-                stateEntry.StateStatus = "END";
-                model.UpdateState(stateEntry);
-
-                work.LastBackupDate = DateTime.Now;
-                model.SaveWorks();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{GetTranslation("BackupError")}: {ex.Message}");
-            }
+                }
+            });
+            thread.Start();
         }
 
 

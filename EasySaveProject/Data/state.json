@@ -23,6 +23,18 @@
       "CurrentPathDst": "C:\\Users\\H-obby\\CESI-EasySave-Project\\tests\\destination",
       "CurrentDateTime": "22/05/2025 23:30:53",
       "StateStatus": "END"
+    },
+    {
+      "Name": "dd",
+      "TotalFile": 25,
+      "TotalSize": 841137738,
+      "Progress": 100,
+      "LeftFile": 0,
+      "LeftSize": 0,
+      "CurrentPathSrc": "C:\\Users\\hobby\\Documents\\D\u0026D",
+      "CurrentPathDst": "C:\\Users\\hobby\\CESI-EasySave-Project",
+      "CurrentDateTime": "27/05/2025 14:30:09",
+      "StateStatus": "END"
     }
   ]
 }

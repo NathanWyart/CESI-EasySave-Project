@@ -33,9 +33,9 @@ namespace NS_Model
 
 
         // Function to add a new work to the list of works
-        public void AddWork(string name, string src, string dst, BackupType type)
+        public void AddWork(string name, string src, string dst)
         {
-            Works.Add(new Work(name, src, dst, type));
+            Works.Add(new Work(name, src, dst));
         }
 
         // Function to save the list of works to a JSON file

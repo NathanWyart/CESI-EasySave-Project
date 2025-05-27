@@ -247,27 +247,17 @@ namespace NS_View
             string? src = Console.ReadLine();
             Console.Write(_viewModel.GetTranslation("EnterDestination") + " ");
             string? dst = Console.ReadLine();
-            Console.Write(_viewModel.GetTranslation("EnterType") + " ");
-            string? typeInput = Console.ReadLine();
 
             // Validate input
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(src) || string.IsNullOrWhiteSpace(dst) || string.IsNullOrWhiteSpace(typeInput))
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(src) || string.IsNullOrWhiteSpace(dst))
             {
                 Console.WriteLine(_viewModel.GetTranslation("InvalidInputAllFields"));
                 Console.ReadLine();
                 return;
             }
 
-            // Validate backup type
-            if (!Enum.TryParse<BackupType>(typeInput, true, out BackupType type))
-            {
-                Console.WriteLine(_viewModel.GetTranslation("InvalidBackupType"));
-                Console.ReadLine();
-                return;
-            }
-
             // Add the work
-            _viewModel.AddWork(name, src, dst, type);
+            _viewModel.AddWork(name, src, dst);
             Console.WriteLine(_viewModel.GetTranslation("PressEnter"));
             Console.ReadLine();
         }
@@ -295,7 +285,7 @@ namespace NS_View
             Console.WriteLine(_viewModel.GetTranslation("ListOfBackups") + "\n");
             foreach (var work in works)
             {
-                Console.WriteLine($"[{i}] {work.Name} - {work.Src} -> {work.Dst} ({work.BackupType}) \n({_viewModel.GetTranslation("LastBackupUpdate")}{work.LastBackupDate})");
+                Console.WriteLine($"[{i}] {work.Name} - {work.Src} -> {work.Dst} \n({_viewModel.GetTranslation("LastBackupUpdate")}{work.LastBackupDate})");
                 i++;
             }
         }
