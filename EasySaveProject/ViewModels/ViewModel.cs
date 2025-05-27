@@ -24,13 +24,11 @@ namespace NS_ViewModel
         private string _languageMode;
 
         private string _encryptedExtensions;
-        // Ajouter en haut de la classe ViewModel
 
-        // Dans la classe ViewModel
         private static bool _isBusinessSoftwareRunning = false;
         private System.Timers.Timer _softwareCheckTimer;
 
-        // Propriété publique pour accéder à l'état
+        // Public property to check if business software is running.
         public static bool IsBusinessSoftwareRunning => _isBusinessSoftwareRunning;
 
         // Constructor of the ViewModel.
@@ -40,8 +38,8 @@ namespace NS_ViewModel
             model.LoadWorks(); // Load works at the start
             LoadSettings(); // Load settings at the start
 
-            // Initialiser et démarrer le timer de surveillance
-            _softwareCheckTimer = new System.Timers.Timer(1000); // Vérifie toutes les secondes
+            // Initialize the software check timer to monitor business software processes
+            _softwareCheckTimer = new System.Timers.Timer(1000); // Check evey second
             _softwareCheckTimer.Elapsed += (s, e) => CheckBusinessSoftwareProcesses();
             _softwareCheckTimer.AutoReset = true;
             _softwareCheckTimer.Start();
@@ -51,7 +49,6 @@ namespace NS_ViewModel
         public void Run()
         {
             view.Menu();
-
         }
 
         // This method returns the list of works.
@@ -60,12 +57,6 @@ namespace NS_ViewModel
         // This method adds a new work to the list of works.
         public void AddWork(string name, string src, string dst, BackupType type)
         {
-            // Check the limit of 5 works
-            if (model.Works.Count >= 5)
-            {
-                Console.WriteLine(GetTranslation("MaxBackupLimit"));
-                return;
-            }
             // Add the work to the model
             model.AddWork(name, src, dst, type);
             model.SaveWorks();
@@ -201,7 +192,7 @@ namespace NS_ViewModel
                         fileThread.Start();
                     }
 
-                    // Attendre que tous les threads de fichiers soient terminés
+                    // Wait for all file threads to complete
                     foreach (var t in fileThreads)
                     {
                         t.Join();
@@ -336,7 +327,7 @@ namespace NS_ViewModel
         public string GetEncryptedExtensions() => _encryptedExtensions;
         private string _logFormat;
 
-        // Remplacer la méthode LoadSettings
+        // This method loads the settings from a JSON or XML file.
         private void LoadSettings()
         {
             if (File.Exists(Model.AppPaths.SettingsPath))
@@ -357,7 +348,8 @@ namespace NS_ViewModel
                 SaveSettings();
             }
         }
-        // Remplacer la méthode SaveSettings
+
+        // This method saves the settings.
         private void SaveSettings()
         {
             var settings = new
@@ -380,23 +372,21 @@ namespace NS_ViewModel
 
         public string GetCurrentLogFormat() => _logFormat;
 
-
         // This method returns the translation for a given key.
         public string GetTranslation(string key)
         {
             return LanguageManager.GetTranslation(key, _languageMode);
         }
 
-        // Remplacer la déclaration de la liste des logiciels métier
         public List<string> softwares = new List<string>();
 
         // Show the list of Buisness Softwares
         public void ShowSoftwares()
         {
-            Console.WriteLine("Liste des logiciels métier :");
+            Console.WriteLine(GetTranslation("SoftwareList"));
             if (softwares.Count == 0)
             {
-                Console.WriteLine("La liste est vide.");
+                Console.WriteLine(GetTranslation("EmptyList"));
             }
             else
             {
@@ -407,14 +397,14 @@ namespace NS_ViewModel
             }
         }
 
-        // Ajouter un appel à SaveSettings dans AddSoftware et RemoveSoftware
+        // Add a software to the list
         public void AddSoftware()
         {
-            Console.Write("Entrez le nom du logiciel (ex: notepad++.exe) : ");
+            Console.Write(GetTranslation("SoftwareToAdd"));
             string software = Console.ReadLine();
             softwares.Add(software);
             SaveSettings();
-            Console.WriteLine($"Le logiciel '{software}' a été ajouté.");
+            Console.WriteLine($"{GetTranslation("Software")} '{software}' {GetTranslation("HasBeenAdded")}");
         }
 
         // Remove a software from the list
@@ -426,21 +416,20 @@ namespace NS_ViewModel
                 return;
             }
 
-            Console.Write("Entrez le numéro du logiciel à supprimer : ");
+            Console.Write(GetTranslation("SoftwareDelete"));
             if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= softwares.Count)
             {
                 string software = softwares[index - 1];
                 softwares.RemoveAt(index - 1);
-                SaveSettings();
-                Console.WriteLine($"Le logiciel '{software}' a été supprimé.");
+                Console.WriteLine($"{GetTranslation("Software")} '{software}' {GetTranslation("HasBeenRemoved")}");
             }
             else
             {
-                Console.WriteLine("Numéro invalide.");
+                Console.WriteLine(GetTranslation("InvalidNumber"));
             }
         }
 
-        // Nouvelle méthode privée pour surveiller les processus
+        // Check if any business software processes are running
         private void CheckBusinessSoftwareProcesses()
         {
             bool found = false;
@@ -459,7 +448,7 @@ namespace NS_ViewModel
             _isBusinessSoftwareRunning = found;
         }
 
-        // Remplacer la méthode GetSoftware par :
+        // Get the status of business software processes
         public bool GetSoftware()
         {
             return _isBusinessSoftwareRunning;

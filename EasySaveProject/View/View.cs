@@ -26,7 +26,7 @@ namespace NS_View
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("BackupWorkMenu"));
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("ExecutionMenu"));
-                Console.WriteLine("3 : " + _viewModel.GetTranslation("GestionMetierLogiciel"));
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("SoftwareMenu"));
                 Console.WriteLine("4 : " + _viewModel.GetTranslation("Settings"));
                 Console.WriteLine("5 : " + _viewModel.GetTranslation("Quit"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
@@ -145,7 +145,7 @@ namespace NS_View
             }
         }
 
-        // Displays the buisness softwares menu.
+        // Displays the business softwares menu.
         public void DisplaySoftwareMenu()
         {
             while (true)
@@ -153,9 +153,9 @@ namespace NS_View
                 Console.Clear();
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("SoftwareMenu")} ===\n");
-                Console.WriteLine("1 : " + _viewModel.GetTranslation ("ShowSoftwares"));
-                Console.WriteLine("2 : " + _viewModel.GetTranslation("AddSoftware"));
-                Console.WriteLine("3 : " + _viewModel.GetTranslation("RemoveSoftware"));
+                Console.WriteLine("1 : " + _viewModel.GetTranslation("AddSoftware"));
+                Console.WriteLine("2 : " + _viewModel.GetTranslation("RemoveSoftware"));
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("ShowSoftwares"));
                 Console.WriteLine("4 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
@@ -165,17 +165,17 @@ namespace NS_View
                     switch (choice)
                     {
                         case 1:
-                            _viewModel.ShowSoftwares();
-                            Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
-                            Console.ReadLine();
-                            break;
-                        case 2:
                             _viewModel.AddSoftware();
                             Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
                             Console.ReadLine();
                             break;
-                        case 3:
+                        case 2:
                             _viewModel.RemoveSoftware();
+                            Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
+                            Console.ReadLine();
+                            break;
+                        case 3:
+                            _viewModel.ShowSoftwares();
                             Console.WriteLine("\n" + _viewModel.GetTranslation("PressEnter"));
                             Console.ReadLine();
                             break;
@@ -204,7 +204,8 @@ namespace NS_View
                 Console.WriteLine("1 : " + _viewModel.GetTranslation("ChangeLanguage") + "\n");
                 Console.WriteLine(_viewModel.GetTranslation("LogFormat") + $" : {_viewModel.GetCurrentLogFormat()}");
                 Console.WriteLine("2 : " + _viewModel.GetTranslation("ChangeLogFormat") + "\n");
-                Console.WriteLine("3 : Change encripted extensions");
+                Console.WriteLine($"{_viewModel.GetTranslation("CurrentEncryptedExtensions")} : {_viewModel.GetEncryptedExtensions()}");
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("ChangeEncryptedExtension") + "\n");
                 Console.WriteLine("4 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
@@ -217,7 +218,7 @@ namespace NS_View
                             _viewModel.ToggleLanguage();
                             break;
                         case 2:
-                        _viewModel.ToggleLogFormat();
+                            _viewModel.ToggleLogFormat();
                             Console.WriteLine(_viewModel.GetTranslation("PressEnter"));
                             Console.ReadLine();
                             break;
@@ -243,11 +244,10 @@ namespace NS_View
                 Console.Clear();
                 Console.WriteLine($"===== {_viewModel.GetTranslation("AppTitle")} =====\n");
                 Console.WriteLine($"=== {_viewModel.GetTranslation("EncryptionSettings")} ===\n");
-                Console.WriteLine($"Current Encrypted Extensions : {_viewModel.GetEncryptedExtensions()}");
-                Console.WriteLine("1 : " + _viewModel.GetTranslation("Reset"));
-                Console.WriteLine("2 : " + "Set extensions to encrypt");
-                Console.WriteLine("3 : " + "Add extensions to encrypt");
-                Console.WriteLine("4 : " + _viewModel.GetTranslation("Back"));
+                Console.WriteLine($" {_viewModel.GetTranslation("CurrentEncryptedExtensions")} : {_viewModel.GetEncryptedExtensions()}");
+                Console.WriteLine("1 : " + _viewModel.GetTranslation("AddExtensionToEncrypt"));
+                Console.WriteLine("2 : " + _viewModel.GetTranslation("Reset"));
+                Console.WriteLine("3 : " + _viewModel.GetTranslation("Back"));
                 Console.Write("\n" + _viewModel.GetTranslation("Choice") + " ");
 
                 // Get user input and validate it.
@@ -256,28 +256,20 @@ namespace NS_View
                     switch (choice)
                     {
                         case 1:
-                            Console.WriteLine("Confirm reset ? (Y/N) : ");
-                            string? choice1 = Console.ReadLine();
-                            if (choice1 == "Y" || choice1 == "y")
-                                _viewModel.SetEncryptedExtensions("");
-                            break;
-                        case 2:
-                            Console.WriteLine("Enter the extensions to encrypt (ex. .txt;.docx) : ");
-                            string? extensions = Console.ReadLine();
-                            Console.WriteLine($"Confirm Change from '{_viewModel.GetEncryptedExtensions()}' to '{extensions}' ? (Y/N) : ");
-                            string? choice2 = Console.ReadLine();
-                            if (choice2 == "Y" || choice2 == "y")
-                                _viewModel.SetEncryptedExtensions(extensions);
-                            break;
-                        case 3:
-                            Console.WriteLine("Enter the extensions to add (ex. .txt;.docx) : ");
+                            Console.WriteLine(_viewModel.GetTranslation("ExtensionToAdd"));
                             string? extensions2 = Console.ReadLine();
-                            Console.WriteLine($"Confirm Change from '{_viewModel.GetEncryptedExtensions()}' to '{_viewModel.GetEncryptedExtensions()};{extensions2}' ? (Y/N) : ");
+                            Console.WriteLine($"{_viewModel.GetTranslation("ConfirmChanges")} '{_viewModel.GetEncryptedExtensions()}' {_viewModel.GetTranslation("To")} '{_viewModel.GetEncryptedExtensions()};{extensions2}' ? (Y/N) : ");
                             string? choice3 = Console.ReadLine();
                             if (choice3 == "Y" || choice3 == "y")
                                 _viewModel.AddEncryptedExtension(extensions2);
                             break;
-                        case 4:
+                        case 2:
+                            Console.WriteLine(_viewModel.GetTranslation("ConfirmReset"));
+                            string? choice1 = Console.ReadLine();
+                            if (choice1 == "Y" || choice1 == "y")
+                                _viewModel.SetEncryptedExtensions("");
+                            break;
+                        case 3:
                             return;
                     }
                 }
