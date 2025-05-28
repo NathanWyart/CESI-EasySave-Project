@@ -1,4 +1,10 @@
 {
   "Language": "English",
-  "LogFormat": "JSON"
+  "Extensions": ".txt",
+  "LogFormat": "JSON",
+  "SteveJobs": [
+    "notepad++.exe",
+    "calculatrice.exe",
+    "Clair Obscur : Expedition 33.exe"
+  ]
 }
