@@ -18,11 +18,12 @@ namespace EasySave_WPF.View
     /// <summary>
     /// Logique d'interaction pour SettingsPage.xaml
     /// </summary>
-    public partial class SettingsPage : Page
+    public partial class SettingsPage : UserControl
     {
         public SettingsPage()
         {
             InitializeComponent();
         }
     }
+
 }

@@ -1,40 +1,43 @@
-﻿<Page x:Class="EasySave_WPF.View.SettingsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Paramètres">
+﻿<UserControl x:Class="EasySave_WPF.View.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="600">
 
-    <Grid Margin="20">
-        <StackPanel>
-            <!-- Titre -->
-            <TextBlock Text="⚙️ Paramètres de l'application"
+	<Grid Margin="20">
+		<StackPanel>
+			<!-- Titre -->
+			<TextBlock Text="⚙️ Paramètres de l'application"
                        FontSize="22"
                        FontWeight="Bold"
                        Margin="0 0 0 20"
                        HorizontalAlignment="Center"/>
 
-            <!-- Langue -->
-            <TextBlock Text="Langue de l'application :" Margin="0 10 0 5"/>
-            <ComboBox Width="200" SelectedIndex="0">
-                <ComboBoxItem Content="Français"/>
-                <ComboBoxItem Content="English"/>
-            </ComboBox>
+			<!-- Langue -->
+			<TextBlock Text="Langue de l'application :" Margin="0 10 0 5"/>
+			<ComboBox Width="200" SelectedIndex="0">
+				<ComboBoxItem Content="Français"/>
+				<ComboBoxItem Content="English"/>
+			</ComboBox>
 
-            <!-- Format log -->
-            <TextBlock Text="Format du fichier de log :" Margin="0 20 0 5"/>
-            <ComboBox Width="200" SelectedIndex="0">
-                <ComboBoxItem Content="JSON"/>
-                <ComboBoxItem Content="XML"/>
-            </ComboBox>
+			<!-- Format log -->
+			<TextBlock Text="Format du fichier de log :" Margin="0 20 0 5"/>
+			<ComboBox Width="200" SelectedIndex="0">
+				<ComboBoxItem Content="JSON"/>
+				<ComboBoxItem Content="XML"/>
+			</ComboBox>
 
-            <!-- Logiciel métier -->
-            <TextBlock Text="Logiciel métier à surveiller :" Margin="0 20 0 5"/>
-            <TextBox Width="200" Text="calc.exe"/>
+			<!-- Logiciel métier -->
+			<TextBlock Text="Logiciel métier à surveiller :" Margin="0 20 0 5"/>
+			<TextBox Width="200" Text="calc.exe"/>
 
-            <!-- Bouton enregistrer -->
-            <Button Content="💾 Enregistrer les paramètres"
+			<!-- Bouton enregistrer -->
+			<Button Content="💾 Enregistrer les paramètres"
                     Margin="0 30 0 0"
                     Width="200"
                     HorizontalAlignment="Left"/>
-        </StackPanel>
-    </Grid>
-</Page>
+		</StackPanel>
+	</Grid>
+</UserControl>

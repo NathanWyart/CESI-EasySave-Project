@@ -12,5 +12,12 @@
     "Dst": "ok",
     "BackupType": 0,
     "LastBackupDate": "2025-05-27T18:03:51.9825656+02:00"
+  },
+  {
+    "Name": "ok",
+    "Src": "hb",
+    "Dst": "yb",
+    "BackupType": 0,
+    "LastBackupDate": "2025-05-28T15:09:51.9106901+02:00"
   }
 ]
