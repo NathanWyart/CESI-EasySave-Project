@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasySave_WPF", "EasySave_WPF.csproj", "{F951EA92-4C9E-433F-AC69-281002A3CE28}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F951EA92-4C9E-433F-AC69-281002A3CE28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F951EA92-4C9E-433F-AC69-281002A3CE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F951EA92-4C9E-433F-AC69-281002A3CE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F951EA92-4C9E-433F-AC69-281002A3CE28}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3EDFB9E-CC1C-4AE0-901D-15FB1CC2EA1D}
+	EndGlobalSection
+EndGlobal

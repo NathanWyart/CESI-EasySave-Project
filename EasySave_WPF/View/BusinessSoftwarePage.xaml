@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="EasySave_WPF.View.BusinessSoftwarePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EasySave_WPF.ViewModels"
+             Height="400" Width="600">
+
+    <UserControl.DataContext>
+        <vm:BusinessSoftwareViewModel />
+    </UserControl.DataContext>
+
+    <StackPanel Margin="20">
+        <TextBlock Text="Gestion des logiciels métier" FontSize="20" FontWeight="Bold" Margin="0 0 0 20" />
+
+        <Button Content="Ajouter un logiciel" Width="200" Margin="0 0 0 10" Command="{Binding AddSoftwareCommand}" />
+
+        <ListView ItemsSource="{Binding BusinessSoftwares}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nom" Width="300" DisplayMemberBinding="{Binding}" />
+                    <GridViewColumn Header="Action" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Supprimer"
+                                        Command="{Binding DataContext.RemoveSoftwareCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </StackPanel>
+</UserControl>

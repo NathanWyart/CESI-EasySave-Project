@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="LoggerLib\**" />
+    <EmbeddedResource Remove="LoggerLib\**" />
+    <None Remove="LoggerLib\**" />
+    <Page Remove="LoggerLib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoSoft\Encryption.csproj" />
+    <ProjectReference Include="..\LoggerLib\LoggerLib.csproj" />
+  </ItemGroup>
+
+</Project>

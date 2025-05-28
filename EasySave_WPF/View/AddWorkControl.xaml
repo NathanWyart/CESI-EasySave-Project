@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="EasySave_WPF.View.AddWorkControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="AddControl"
+             Height="300" Width="400">
+
+    <!-- ⚠️ SUPPRIMÉ : Pas de ViewModel déclaré ici -->
+    <!--<UserControl.DataContext>
+        <vm:AddWorkViewModel />
+    </UserControl.DataContext>-->
+
+    <Border BorderBrush="#ced6e0" BorderThickness="1" Background="White" Padding="20">
+        <StackPanel>
+            <TextBlock Text="Ajouter un travail" FontSize="18" FontWeight="Bold" Margin="0 0 0 20" HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Nom :" />
+            <TextBox Text="{Binding WorkName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Text="Source :" Margin="10 5 0 0"/>
+            <TextBox Text="{Binding Source, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Text="Destination :" Margin="10 5 0 0"/>
+            <TextBox Text="{Binding Destination, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Text="Type :" Margin="10 5 0 0"/>
+            <ComboBox SelectedValue="{Binding BackupType}" SelectedValuePath="Content">
+                <ComboBoxItem Content="FULL"/>
+                <ComboBoxItem Content="DIFFERENTIAL"/>
+            </ComboBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+                <Button Content="Annuler" Width="100" Margin="5"
+                        Command="{Binding CancelAddCommand}"/>
+                <Button Content="Ajouter" Width="100" Margin="5"
+                        Command="{Binding ConfirmAddCommand}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>
