@@ -1,10 +1,11 @@
 {
-  "Language": "English",
-  "Extensions": ".txt",
-  "LogFormat": "JSON",
-  "SteveJobs": [
-    "notepad++.exe",
-    "calculatrice.exe",
-    "Clair Obscur : Expedition 33.exe"
-  ]
+    "Language": "English",
+    "Extensions": ".txt",
+    "LogFormat": "JSON",
+    "SteveJobs": [
+        "notepad++.exe",
+        "calculatrice.exe",
+        "Clair Obscur : Expedition 33.exe"
+    ],
+    "PriorityExtensions": [ ".pdf", ".docx", ".xlsx" ]
 }

@@ -9,6 +9,7 @@ using EasySave_WPF.Commands;
 using EasySave_WPF.Model;
 using EasySave_WPF.View;
 using LoggerLib;
+using System.IO;
 
 namespace EasySave_WPF.ViewModels
 {
@@ -35,6 +36,17 @@ namespace EasySave_WPF.ViewModels
         public ICommand ExecuteWorkCommand { get; }
         public ICommand ExecuteAllCommand { get; }
         public ICommand DeleteAllCommand { get; }
+        private bool HasPriorityFiles(Work work)
+        {
+            var files = Directory.GetFiles(work.Src, "*.*", SearchOption.AllDirectories);
+            return files.Any(file => AppData.PriorityExtensions.Contains(Path.GetExtension(file)));
+        }
+
+        private bool AnyPriorityFilesPending()
+        {
+            return Works.Any(work => HasPriorityFiles(work));
+        }
+
 
         public WorkListViewModel()
         {
@@ -61,8 +73,17 @@ namespace EasySave_WPF.ViewModels
             ExecuteWorkCommand = new RelayCommand(workObj =>
             {
                 if (workObj is Work work)
+                {
+                    if (AnyPriorityFilesPending() && !HasPriorityFiles(work))
+                    {
+                        MessageBox.Show("❗ Un ou plusieurs fichiers prioritaires sont en attente. Veuillez les traiter d'abord.");
+                        return;
+                    }
+
                     ExecuteWork(work);
+                }
             });
+
 
             ExecuteAllCommand = new RelayCommand(_ =>
             {
@@ -72,9 +93,18 @@ namespace EasySave_WPF.ViewModels
                     return;
                 }
 
+                if (AnyPriorityFilesPending())
+                {
+                    MessageBox.Show("❗ Des fichiers prioritaires sont présents dans au moins un travail. Veuillez les traiter avant d'exécuter les autres sauvegardes.");
+                    return;
+                }
+
                 foreach (var work in Works)
+                {
                     ExecuteWork(work);
+                }
             });
+
 
             DeleteAllCommand = new RelayCommand(_ =>
             {
