@@ -1,23 +1,16 @@
 [
   {
-    "Name": "dd",
-    "Src": "C:\\Users\\hobby\\Documents\\D\u0026D",
-    "Dst": "C:\\Users\\hobby\\CESI-EasySave-Project",
-    "BackupType": 1,
-    "LastBackupDate": "2025-05-27T16:02:19.0658922+02:00"
+    "Name": "TestDocuments",
+    "Src": "C:\\Users\\chokr\\Desktop\\TestEasySave\\Source1",
+    "Dst": "C:\\Users\\chokr\\Desktop\\TestEasySave\\Backup1",
+    "BackupType": 0,
+    "LastBackupDate": "2025-05-28T12:00:00"
   },
   {
-    "Name": "OK",
-    "Src": "oj",
-    "Dst": "ok",
+    "Name": "TestImages",
+    "Src": "C:\\Users\\%USERNAME%\\Desktop\\TestEasySave\\Images",
+    "Dst": "C:\\Users\\%USERNAME%\\Desktop\\TestEasySave\\BackupImages",
     "BackupType": 0,
-    "LastBackupDate": "2025-05-27T18:03:51.9825656+02:00"
-  },
-  {
-    "Name": "ok",
-    "Src": "hb",
-    "Dst": "yb",
-    "BackupType": 0,
-    "LastBackupDate": "2025-05-28T15:09:51.9106901+02:00"
+    "LastBackupDate": "2025-05-28T12:00:00"
   }
 ]

@@ -1,11 +1,14 @@
-﻿using EasySave_WPF.Commands;
-using EasySave_WPF.Model;
-using EasySave_WPF.View;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using EasySave_WPF.Commands;
+using EasySave_WPF.Model;
+using EasySave_WPF.View;
+using LoggerLib;
 
 namespace EasySave_WPF.ViewModels
 {
@@ -13,7 +16,6 @@ namespace EasySave_WPF.ViewModels
     {
         public ObservableCollection<Work> Works { get; }
 
-        // Champs pour formulaire d'ajout
         public string WorkName { get => _workName; set { _workName = value; OnPropertyChanged(); } }
         public string Source { get => _source; set { _source = value; OnPropertyChanged(); } }
         public string Destination { get => _destination; set { _destination = value; OnPropertyChanged(); } }
@@ -26,7 +28,6 @@ namespace EasySave_WPF.ViewModels
 
         private Window _popupWindow;
 
-        // Commandes
         public ICommand OpenAddPopupCommand { get; }
         public ICommand ConfirmAddCommand { get; }
         public ICommand CancelAddCommand { get; }
@@ -60,10 +61,7 @@ namespace EasySave_WPF.ViewModels
             ExecuteWorkCommand = new RelayCommand(workObj =>
             {
                 if (workObj is Work work)
-                {
-                    // Simulation de l'exécution
-                    MessageBox.Show($"[SIMULATION] Exécution du travail : {work.Name}");
-                }
+                    ExecuteWork(work);
             });
 
             ExecuteAllCommand = new RelayCommand(_ =>
@@ -75,9 +73,7 @@ namespace EasySave_WPF.ViewModels
                 }
 
                 foreach (var work in Works)
-                {
-                    MessageBox.Show($"[SIMULATION] Exécution de : {work.Name}");
-                }
+                    ExecuteWork(work);
             });
 
             DeleteAllCommand = new RelayCommand(_ =>
@@ -93,6 +89,58 @@ namespace EasySave_WPF.ViewModels
                     AppData.Model.SaveWorks();
                 }
             });
+        }
+
+        private void ExecuteWork(Work work)
+        {
+            if (!Directory.Exists(work.Src))
+            {
+                MessageBox.Show($"Le dossier source {work.Src} est introuvable.");
+                return;
+            }
+
+            if (!Directory.Exists(work.Dst))
+            {
+                Directory.CreateDirectory(work.Dst);
+            }
+
+            var files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
+            long totalSize = 0;
+            var start = DateTime.Now;
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    var relativePath = Path.GetRelativePath(work.Src, file);
+                    var targetPath = Path.Combine(work.Dst, relativePath);
+                    var targetDir = Path.GetDirectoryName(targetPath);
+                    if (!Directory.Exists(targetDir))
+                        Directory.CreateDirectory(targetDir);
+
+                    File.Copy(file, targetPath, true);
+
+                    totalSize += new FileInfo(file).Length;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erreur lors de la copie de '{file}' : {ex.Message}");
+                }
+            }
+
+            var duration = (DateTime.Now - start).TotalSeconds;
+
+            Logger.WriteLog(new LogEntry
+            {
+                Name = work.Name,
+                FileSource = work.Src,
+                FileDestination = work.Dst,
+                FileSize = totalSize,
+                FileTransferTime = duration,
+                Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            MessageBox.Show($"✅ Travail « {work.Name} » exécuté :\n{totalSize / 1024} Ko transférés en {duration:F2} s");
         }
 
         private void OpenAddPopup()
