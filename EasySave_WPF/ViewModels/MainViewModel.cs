@@ -24,7 +24,7 @@ namespace EasySave_WPF.ViewModels
 
         // Commandes de navigation
         public ICommand ShowWorkListCommand { get; }
-        public ICommand ShowExecutionCommand { get; }
+        public ICommand ShowWorkStateCommand { get; }
         public ICommand ShowSettingsCommand { get; }
         public ICommand ShowBusinessSoftwareCommand { get; } // ✅ nouvelle commande
 
@@ -32,7 +32,7 @@ namespace EasySave_WPF.ViewModels
         public MainViewModel()
         {
             ShowWorkListCommand = new RelayCommand(_ => CurrentPage = new WorkListPage());
-            ShowExecutionCommand = new RelayCommand(_ => CurrentPage = new ExecutionPage());
+            ShowWorkStateCommand = new RelayCommand(_ => CurrentPage = new WorkStatePage());
             ShowSettingsCommand = new RelayCommand(_ => CurrentPage = new SettingsPage());
             ShowBusinessSoftwareCommand = new RelayCommand(_ => CurrentPage = new BusinessSoftwarePage()); // ✅ logique d'affichage
 

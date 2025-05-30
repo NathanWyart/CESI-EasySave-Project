@@ -16,7 +16,7 @@ namespace EasySave_WPF.Model
         public DateTime? LastBackupDate { get; set; }
 
         // Constructor to initialize a work.
-        public Work() { }
+        public Work() { } 
 
         // Constructor to initialize a work with parameters.
         public Work(string name, string src, string dst, BackupType type)

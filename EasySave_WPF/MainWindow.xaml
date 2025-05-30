@@ -25,7 +25,7 @@
             Margin="0 5" Padding="5" Foreground="White" Background="#57606f"/>
 
             <Button Content="Exécution"
-            Command="{Binding ShowExecutionCommand}"
+            Command="{Binding ShowWorkStateCommand}"
             Margin="0 5" Padding="5" Foreground="White" Background="#57606f"/>
 
             <Button Content="Logiciels métier"
