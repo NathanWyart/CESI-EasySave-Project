@@ -23,6 +23,18 @@
       "CurrentPathDst": "C:\\Users\\nwyar\\Desktop\\Test4",
       "CurrentDateTime": "12/05/2025 15:30:12",
       "StateStatus": "END"
+    },
+    {
+      "Name": "TestDocuments",
+      "TotalFile": 1,
+      "TotalSize": 0,
+      "Progress": 100,
+      "LeftFile": 0,
+      "LeftSize": 0,
+      "CurrentPathSrc": "C:\\Users\\chokr\\Desktop\\TestEasySave\\Source1\\Source1.txt",
+      "CurrentPathDst": "C:\\Users\\chokr\\Desktop\\TestEasySave\\Backup1\\Source1.txt",
+      "CurrentDateTime": "31/05/2025 19:07:11",
+      "StateStatus": "END"
     }
   ]
 }

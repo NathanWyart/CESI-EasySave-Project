@@ -1,8 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using EasySave_WPF.Commands;
@@ -104,43 +107,63 @@ namespace EasySave_WPF.ViewModels
                 Directory.CreateDirectory(work.Dst);
             }
 
-            var files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
-            long totalSize = 0;
-            var start = DateTime.Now;
-
-            foreach (var file in files)
+            Task.Run(() =>
             {
-                try
+                var files = Directory.GetFiles(work.Src, "*", SearchOption.AllDirectories);
+                long totalSize = files.Sum(f => new FileInfo(f).Length);
+                int totalFiles = files.Length;
+                int copiedFiles = 0;
+                long copiedSize = 0;
+
+                var start = DateTime.Now;
+
+                foreach (var file in files)
                 {
-                    var relativePath = Path.GetRelativePath(work.Src, file);
-                    var targetPath = Path.Combine(work.Dst, relativePath);
-                    var targetDir = Path.GetDirectoryName(targetPath);
-                    if (!Directory.Exists(targetDir))
-                        Directory.CreateDirectory(targetDir);
+                    try
+                    {
+                        var relativePath = Path.GetRelativePath(work.Src, file);
+                        var targetPath = Path.Combine(work.Dst, relativePath);
+                        var targetDir = Path.GetDirectoryName(targetPath);
+                        if (!Directory.Exists(targetDir))
+                            Directory.CreateDirectory(targetDir);
 
-                    File.Copy(file, targetPath, true);
+                        File.Copy(file, targetPath, true);
 
-                    totalSize += new FileInfo(file).Length;
+                        copiedFiles++;
+                        copiedSize += new FileInfo(file).Length;
+
+                        var progress = (int)((double)copiedFiles / totalFiles * 100);
+
+                        var currentState = new State
+                        {
+                            Name = work.Name,
+                            TotalFile = totalFiles,
+                            TotalSize = totalSize,
+                            LeftFile = totalFiles - copiedFiles,
+                            LeftSize = totalSize - copiedSize,
+                            Progress = progress,
+                            CurrentPathSrc = file,
+                            CurrentPathDst = targetPath,
+                            CurrentDateTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                            StateStatus = progress == 100 ? "END" : "IN_PROGRESS"
+                        };
+
+                        AppData.Model.UpdateState(currentState);
+                    }
+                    catch (Exception ex)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                            MessageBox.Show($"Erreur lors de la copie de '{file}' : {ex.Message}"));
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Erreur lors de la copie de '{file}' : {ex.Message}");
-                }
-            }
 
-            var duration = (DateTime.Now - start).TotalSeconds;
+                var duration = (DateTime.Now - start).TotalSeconds;
 
-            Logger.WriteLog(new LogEntry
-            {
-                Name = work.Name,
-                FileSource = work.Src,
-                FileDestination = work.Dst,
-                FileSize = totalSize,
-                FileTransferTime = duration,
-                Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                AppData.Model.LogAction(work.Name, work.Src, work.Dst, totalSize, duration, "JSON");
+
+                Application.Current.Dispatcher.Invoke(() =>
+                    MessageBox.Show($"✅ Travail « {work.Name} » exécuté :\n{totalSize / 1024} Ko transférés en {duration:F2} s"));
             });
-
-            MessageBox.Show($"✅ Travail « {work.Name} » exécuté :\n{totalSize / 1024} Ko transférés en {duration:F2} s");
         }
 
         private void OpenAddPopup()
