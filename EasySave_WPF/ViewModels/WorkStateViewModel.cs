@@ -21,6 +21,11 @@ namespace EasySave_WPF.ViewModels
 
         private FileSystemWatcher _watcher;
 
+        public static string ProjectRootPath =>
+            Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+        public static string DataDirectory => Path.Combine(ProjectRootPath, "Data");
+        public static string StatePath => Path.Combine(DataDirectory, "state.json");
+
         public WorkStateViewModel()
         {
             PauseCommand = new RelayCommand(PauseWork);
@@ -29,11 +34,10 @@ namespace EasySave_WPF.ViewModels
 
             LoadStatesFromFile();
 
-            string stateFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "state.json");
-            string stateDir = Path.GetDirectoryName(stateFilePath);
 
-            _watcher = new FileSystemWatcher(stateDir, "state.json")
+            _watcher = new FileSystemWatcher(DataDirectory)
             {
+                Filter = "state.json",
                 NotifyFilter = NotifyFilters.LastWrite
             };
 
@@ -43,17 +47,18 @@ namespace EasySave_WPF.ViewModels
             };
 
             _watcher.EnableRaisingEvents = true;
+
         }
 
         private void LoadStatesFromFile()
         {
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "state.json");
+            
 
-            if (!File.Exists(path)) return;
+            if (!File.Exists(StatePath)) return;
 
             try
             {
-                string json = File.ReadAllText(path);
+                string json = File.ReadAllText(StatePath);
                 var wrapper = JsonSerializer.Deserialize<StateWrapper>(json);
 
                 if (wrapper?.States != null)
