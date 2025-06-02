@@ -1,0 +1,10 @@
+{
+  "Language": "English",
+  "LogFormat": "JSON",
+  "Extensions": ".txt",
+  "PriorityExtensions": ".pdf",
+  "WorkSoftware": [
+    "Notepad"
+  ],
+  "MaxParallelFileSizeKo": 10000
+}
